@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 MAINTAINER Bryan Latten <latten@adobe.com>
 
 # Use in multi-phase builds, when an init process requests for the container to gracefully exit, so that it may be committed

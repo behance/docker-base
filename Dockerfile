@@ -16,7 +16,8 @@ RUN apt-get remove --purge -yq \
         manpages-dev \
         patch \
         perl \
-        # python* \
+        python* \
+        libpng12-0 \
         unattended-upgrades \
     && \
     apt-get autoclean -y && \

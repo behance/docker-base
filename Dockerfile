@@ -9,17 +9,7 @@ ENV SIGNAL_BUILD_STOP=99 \
     S6_KILL_GRACETIME=3000
 
 # Slim the container from its pre-installed heft
-RUN apt-get remove --purge -yq \
-        make \
-        man-db \
-        manpages \
-        manpages-dev \
-        patch \
-        perl \
-        # python* \
-        unattended-upgrades \
-    && \
-    apt-get autoclean -y && \
+RUN apt-get autoclean -y && \
     apt-get autoremove -y && \
     rm -rf /var/lib/{cache,log}/ && \
     rm -rf /var/lib/apt/lists/ && \

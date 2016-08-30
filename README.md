@@ -23,6 +23,12 @@ To inject changes just before runtime, shell scripts may be placed into the
 `/etc/cont-init.d` folder.
 As part of the process manager, these scripts are run in advance of the supervised processes. @see https://github.com/just-containers/s6-overlay#executing-initialization-andor-finalization-tasks
 
+### Testing
+
+Container tests itself as part of build process using [goss](https://github.com/aelsabbahy/goss) validator. 
+To add additional tests, overwrite (or extend) the `/goss.base.yaml` file.  
+
+
 
 ### Advanced Modification
 

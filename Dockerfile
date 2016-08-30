@@ -9,7 +9,16 @@ ENV SIGNAL_BUILD_STOP=99 \
     S6_KILL_GRACETIME=3000
 
 # Slim the container from its pre-installed heft
-RUN apt-get autoclean -y && \
+RUN apt-get update && \
+    apt-get upgrade -yqq && \
+    apt-get install -yqq \
+      curl  \
+    && \
+    # Add goss for local testing
+    curl -L https://github.com/aelsabbahy/goss/releases/download/v0.2.3/goss-linux-amd64 -o /usr/local/bin/goss && \
+    chmod +x /usr/local/bin/goss && \
+    apt-get remove --purge curl && \
+    apt-get autoclean -y && \
     apt-get autoremove -y && \
     rm -rf /var/lib/{cache,log}/ && \
     rm -rf /var/lib/apt/lists/ && \

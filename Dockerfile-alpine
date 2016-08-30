@@ -14,7 +14,11 @@ RUN echo '@edge http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/r
         sed \
         bash \
         grep \
+        curl \
     && \
+    curl -L https://github.com/aelsabbahy/goss/releases/download/v0.2.3/goss-linux-amd64 -o /usr/local/bin/goss && \
+    chmod +x /usr/local/bin/goss && \
+    apk del curl && \
     rm -rf /var/cache/apk/*
 
 # Overlay the root filesystem from this repo
@@ -23,6 +27,8 @@ COPY ./container/root /
 # Add S6 overlay build, to avoid having to build from source
 RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
     rm /tmp/s6-overlay-amd64.tar.gz
+
+RUN goss -g goss.base.yaml validate
 
 # NOTE: intentionally NOT using s6 init as the entrypoint
 # This would prevent container debugging if any of those service crash

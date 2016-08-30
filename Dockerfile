@@ -8,20 +8,20 @@ ENV SIGNAL_BUILD_STOP=99 \
     S6_KILL_FINISH_MAXTIME=5000 \
     S6_KILL_GRACETIME=3000
 
-# Slim the container from its pre-installed heft
+# Upgrade base packages, then clean packaging leftover
 RUN apt-get update && \
     apt-get upgrade -yqq && \
     apt-get install -yqq \
-      curl  \
+      curl \
     && \
     # Add goss for local testing
     curl -L https://github.com/aelsabbahy/goss/releases/download/v0.2.3/goss-linux-amd64 -o /usr/local/bin/goss && \
     chmod +x /usr/local/bin/goss && \
-    apt-get remove --purge curl && \
+    apt-get remove --purge -yq curl && \
     apt-get autoclean -y && \
     apt-get autoremove -y && \
     rm -rf /var/lib/{cache,log}/ && \
-    rm -rf /var/lib/apt/lists/ && \
+    rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/* /var/tmp/*
 
 # Overlay the root filesystem from this repo
@@ -30,6 +30,8 @@ COPY ./container/root /
 # Add S6 overlay build, to avoid having to build from source
 RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
     rm /tmp/s6-overlay-amd64.tar.gz
+
+RUN goss -g goss.base.yaml validate
 
 # NOTE: intentionally NOT using s6 init as the entrypoint
 # This would prevent container debugging if any of those service crash

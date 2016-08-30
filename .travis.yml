@@ -5,3 +5,4 @@ services:
 
 script:
 - docker build .
+- docker build -f Dockerfile-alpine .

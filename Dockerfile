@@ -6,7 +6,9 @@ MAINTAINER Bryan Latten <latten@adobe.com>
 ENV SIGNAL_BUILD_STOP=99 \
     S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     S6_KILL_FINISH_MAXTIME=5000 \
-    S6_KILL_GRACETIME=3000
+    S6_KILL_GRACETIME=3000 \
+    S6_VERSION=v1.18.1.5 \
+    GOSS_VERSION=v0.2.3
 
 # Upgrade base packages, then clean packaging leftover
 RUN apt-get update && \
@@ -14,22 +16,24 @@ RUN apt-get update && \
     apt-get install -yqq \
       curl \
     && \
-    # Add goss for local testing
-    curl -L https://github.com/aelsabbahy/goss/releases/download/v0.2.3/goss-linux-amd64 -o /usr/local/bin/goss && \
+    # Add S6 for zombie reaping, boot-time coordination, signal transformation/distribution
+    curl -L https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-amd64.tar.gz -o /tmp/s6.tar.gz && \
+    tar xzf /tmp/s6.tar.gz -C / && \
+    rm /tmp/s6.tar.gz && \
+    # Add goss for local, serverspec-like testing \
+    curl -L https://github.com/aelsabbahy/goss/releases/download/${GOSS_VERSION}/goss-linux-amd64 -o /usr/local/bin/goss && \
     chmod +x /usr/local/bin/goss && \
-    apt-get remove --purge -yq curl && \
+    apt-get remove --purge -yq \
+        curl \
+    && \
     apt-get autoclean -y && \
     apt-get autoremove -y && \
     rm -rf /var/lib/{cache,log}/ && \
-    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/lib/apt/lists/*.lz4 && \
     rm -rf /tmp/* /var/tmp/*
 
 # Overlay the root filesystem from this repo
 COPY ./container/root /
-
-# Add S6 overlay build, to avoid having to build from source
-RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
-    rm /tmp/s6-overlay-amd64.tar.gz
 
 RUN goss -g goss.base.yaml validate
 

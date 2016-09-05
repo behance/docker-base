@@ -1,8 +1,17 @@
-# docker-base
----
+[![Build Status](https://travis-ci.org/behance/docker-base.svg?branch=master)](https://travis-ci.org/behance/docker-base)  
 
-Integrates S6 process supervisor for a boot process, signal coordination, and zombie reaping (as PID 1)
-@see https://github.com/just-containers/s6-overlay
+
+# docker-base
+
+https://hub.docker.com/r/behance/docker-base/tags/
+
+Ubuntu used by default, Alpine builds also available tagged as `-alpine`  
+
+Provides base OS, patches and stable nginx for quick and easy spinup.  
+
+[S6](https://github.com/just-containers/s6-overlay) process supervisor is used for `only` for zombie reaping (as PID 1), boot coordination, and termination signal translation  
+
+[Goss](https://github.com/aelsabbahy/goss) is used for build-time testing  
 
 ### Expectations
 

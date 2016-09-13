@@ -10,7 +10,7 @@ ENV SIGNAL_BUILD_STOP=99 \
     S6_VERSION=v1.18.1.5 \
     GOSS_VERSION=v0.2.3
 
-# Copy clean.sh file
+# Copy clean.sh file so that it can be used in the next command
 COPY ./container/root/clean.sh /
 
 # Upgrade base packages, then clean packaging leftover

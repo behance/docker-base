@@ -29,7 +29,7 @@ RUN apt-get update && \
     apt-get remove --purge -yq \
       curl \
     && \
-	/bin/bash /clean.sh
+    /bin/bash /clean.sh
 
 # Overlay the root filesystem from this repo
 COPY ./container/root /

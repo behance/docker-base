@@ -10,6 +10,9 @@ ENV SIGNAL_BUILD_STOP=99 \
     S6_VERSION=v1.18.1.5 \
     GOSS_VERSION=v0.2.3
 
+# Copy clean.sh file
+COPY ./container/root/clean.sh /
+
 # Upgrade base packages, then clean packaging leftover
 RUN apt-get update && \
     apt-get upgrade -yqq && \
@@ -24,13 +27,14 @@ RUN apt-get update && \
     curl -L https://github.com/aelsabbahy/goss/releases/download/${GOSS_VERSION}/goss-linux-amd64 -o /usr/local/bin/goss && \
     chmod +x /usr/local/bin/goss && \
     apt-get remove --purge -yq \
-      curl
+      curl \
+    && \
+	/bin/bash /clean.sh
 
 # Overlay the root filesystem from this repo
 COPY ./container/root /
 
-RUN goss -g goss.base.yaml validate && \
-    /bin/bash /clean.sh
+RUN goss -g goss.base.yaml validate
 
 # NOTE: intentionally NOT using s6 init as the entrypoint
 # This would prevent container debugging if any of those service crash

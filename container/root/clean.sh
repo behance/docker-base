@@ -3,7 +3,7 @@
 ########################################################################
 # Performs cleanup, ensure unnecessary packages are removed
 ########################################################################
-# `apt-mark showauto` for any additional installed packages
+# `		` for any additional installed packages
 
 apt-get autoclean -y && \
 apt-get autoremove -y && \

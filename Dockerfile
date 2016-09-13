@@ -24,18 +24,13 @@ RUN apt-get update && \
     curl -L https://github.com/aelsabbahy/goss/releases/download/${GOSS_VERSION}/goss-linux-amd64 -o /usr/local/bin/goss && \
     chmod +x /usr/local/bin/goss && \
     apt-get remove --purge -yq \
-        curl \
-    && \
-    apt-get autoclean -y && \
-    apt-get autoremove -y && \
-    rm -rf /var/lib/{cache,log}/ && \
-    rm -rf /var/lib/apt/lists/*.lz4 && \
-    rm -rf /tmp/* /var/tmp/*
+      curl
 
 # Overlay the root filesystem from this repo
 COPY ./container/root /
 
-RUN goss -g goss.base.yaml validate
+RUN goss -g goss.base.yaml validate && \
+    /bin/bash /clean.sh
 
 # NOTE: intentionally NOT using s6 init as the entrypoint
 # This would prevent container debugging if any of those service crash

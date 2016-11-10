@@ -8,7 +8,7 @@ ENV SIGNAL_BUILD_STOP=99 \
     S6_KILL_FINISH_MAXTIME=5000 \
     S6_KILL_GRACETIME=3000 \
     S6_VERSION=v1.18.1.5 \
-    GOSS_VERSION=v0.2.3
+    GOSS_VERSION=v0.2.4
 
 # Upgrade base packages, then clean packaging leftover
 RUN apt-get update && \

@@ -16,7 +16,13 @@ Provides base OS, patches and stable nginx for quick and easy spinup.
 ### Expectations
 
 To add a service to be monitored, simply create a service script: https://github.com/just-containers/s6-overlay#writing-a-service-script
-For programmatic switches, create the service in `/etc/services-available`, and symlink to `/etc/services.d` to enable
+For programmatic switches, create the service in `/etc/services-available`, and symlink to `/etc/services.d` to enable  
+
+### Security
+
+For Ubuntu-based variants, a convenience script is provided for security-only package updates. To run: 
+`/bin/bash -e /security_updates.sh`  
+
 
 ### Environment Variables
 

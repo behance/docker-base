@@ -10,9 +10,13 @@ ENV SIGNAL_BUILD_STOP=99 \
     S6_VERSION=v1.18.1.5 \
     GOSS_VERSION=v0.2.4
 
-# Upgrade base packages, then clean packaging leftover
-RUN apt-get update && \
-    apt-get upgrade -yqq && \
+# Ensure scripts are available for use in next command
+COPY ./container/root/security_updates.sh / \
+     ./container/root/clean.sh /
+
+# - Upgrade base security packages, then clean packaging leftover
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
+    /bin/bash -e /security_updates.sh && \
     apt-get install -yqq \
       curl \
     && \
@@ -20,17 +24,13 @@ RUN apt-get update && \
     curl -L https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-amd64.tar.gz -o /tmp/s6.tar.gz && \
     tar xzf /tmp/s6.tar.gz -C / && \
     rm /tmp/s6.tar.gz && \
-    # Add goss for local, serverspec-like testing \
+    # Add goss for local, serverspec-like testing
     curl -L https://github.com/aelsabbahy/goss/releases/download/${GOSS_VERSION}/goss-linux-amd64 -o /usr/local/bin/goss && \
     chmod +x /usr/local/bin/goss && \
     apt-get remove --purge -yq \
         curl \
     && \
-    apt-get autoclean -y && \
-    apt-get autoremove -y && \
-    rm -rf /var/lib/{cache,log}/ && \
-    rm -rf /var/lib/apt/lists/*.lz4 && \
-    rm -rf /tmp/* /var/tmp/*
+    /bin/bash -e /clean.sh
 
 # Overlay the root filesystem from this repo
 COPY ./container/root /

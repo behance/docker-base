@@ -10,6 +10,9 @@ ENV SIGNAL_BUILD_STOP=99 \
     S6_VERSION=v1.18.1.5 \
     GOSS_VERSION=v0.2.4
 
+# Copy clean.sh file so that it can be used in the next command
+COPY ./container/root/clean.sh /
+
 # Upgrade base packages, then clean packaging leftover
 RUN apt-get update && \
     apt-get upgrade -yqq && \
@@ -24,13 +27,9 @@ RUN apt-get update && \
     curl -L https://github.com/aelsabbahy/goss/releases/download/${GOSS_VERSION}/goss-linux-amd64 -o /usr/local/bin/goss && \
     chmod +x /usr/local/bin/goss && \
     apt-get remove --purge -yq \
-        curl \
+      curl \
     && \
-    apt-get autoclean -y && \
-    apt-get autoremove -y && \
-    rm -rf /var/lib/{cache,log}/ && \
-    rm -rf /var/lib/apt/lists/*.lz4 && \
-    rm -rf /tmp/* /var/tmp/*
+    /bin/bash /clean.sh
 
 # Overlay the root filesystem from this repo
 COPY ./container/root /

@@ -1,5 +1,5 @@
 FROM alpine:3.4
-MAINTAINER Bryan Latten <latten@adobe.com>
+LABEL Maintainer="Bryan Latten <latten@adobe.com>"
 
 # Use in multi-phase builds, when an init process requests for the container to gracefully exit, so that it may be committed
 # Used with alternative CMD (worker.sh), leverages supervisor to maintain long-running processes
@@ -8,7 +8,10 @@ ENV SIGNAL_BUILD_STOP=99 \
     S6_KILL_FINISH_MAXTIME=5000 \
     S6_KILL_GRACETIME=3000 \
     S6_VERSION=v1.18.1.5 \
-    GOSS_VERSION=v0.2.3
+    GOSS_VERSION=v0.2.5
+
+# Ensure scripts are available for use in next command
+COPY ./container/root/scripts/* /scripts/
 
 RUN echo '@edge http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories && \
     apk update && \

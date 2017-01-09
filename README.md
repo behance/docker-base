@@ -5,13 +5,21 @@
 
 https://hub.docker.com/r/behance/docker-base/tags/
 
-Ubuntu used by default, Alpine builds also available tagged as `-alpine`  
+Provides base OS, security patches, and tools for quick and easy spinup.  
 
-Provides base OS, patches and stable nginx for quick and easy spinup.  
 
-[S6](https://github.com/just-containers/s6-overlay) process supervisor is used for `only` for zombie reaping (as PID 1), boot coordination, and termination signal translation  
+### Variants  
 
-[Goss](https://github.com/aelsabbahy/goss) is used for build-time testing  
+Ubuntu container OS is in use by default  
+
+— Alpine builds available tagged as `-alpine`  
+— Centos builds available tagged as `-centos`
+
+
+### Tools
+
+- [S6](https://github.com/just-containers/s6-overlay) process supervisor is used for `only` for zombie reaping (as PID 1), boot coordination, and termination signal translation  
+- [Goss](https://github.com/aelsabbahy/goss) is used for build-time testing  
 
 ### Expectations
 
@@ -20,8 +28,21 @@ For programmatic switches, create the service in `/etc/services-available`, and 
 
 ### Security
 
-For Ubuntu-based variants, a convenience script is provided for security-only package updates. To run: 
-`/bin/bash -e /security_updates.sh`  
+A convenience script is provided for security-only package updates. 
+
+On Ubuntu and CentOS-based variants, run: 
+```/bin/bash -e /security_updates.sh```
+
+This file is actually a symlink to the variant-specific script contained in the `/scripts` folder
+
+### Packaging
+
+A convenience script is provided for post-package installation cleanup
+
+On Ubuntu and CentOS-based variants, run: 
+```/bin/bash -e /clean.sh```
+
+This file, like security_updates (above) is actually a symlink to the variant-specific script contained in the `/scripts` folder
 
 
 ### Environment Variables
@@ -75,3 +96,4 @@ Directory | Use
 `/etc/services.d/` |  services that will be supervised by S6: https://github.com/just-containers/s6-overlay#writing-a-service-script
 `/etc/services-available/` | same as above, but must be symlinked into `/etc/services.d/` to take effect
 `/run.d/` | shell scripts (ending in .sh) that make runtime modifications ahead of S6 initialization
+`/scripts` | convenience scripts that can be leveraged in derived images

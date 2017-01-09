@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# --- Ubuntu variant only, for other variants, see /scripts folder
+
 #-------------------------------------------------------------------
 # Upgrade just the packages listed as security, without affecting
 # any subsequent usages of apt-get

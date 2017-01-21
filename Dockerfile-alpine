@@ -1,4 +1,4 @@
-FROM alpine:3.4
+FROM alpine:3.5
 LABEL Maintainer="Bryan Latten <latten@adobe.com>"
 
 # Use in multi-phase builds, when an init process requests for the container to gracefully exit, so that it may be committed
@@ -13,7 +13,12 @@ ENV SIGNAL_BUILD_STOP=99 \
 # Ensure scripts are available for use in next command
 COPY ./container/root/scripts/* /scripts/
 
-RUN echo '@edge http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories && \
+# - Symlink variant-specific scripts to default location
+# - Add additional repositories to pull packages from
+# - Add S6 for zombie reaping, boot-time coordination, signal transformation/distribution: @see https://github.com/just-containers/s6-overlay#known-issues-and-workarounds
+# - Add goss for local, serverspec-like testing
+RUN ln -s /scripts/clean_alpine.sh /clean.sh && \
+    echo '@edge http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories && \
     apk update && \
     apk add --no-cache \
         sed \
@@ -29,7 +34,7 @@ RUN echo '@edge http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/r
     curl -L https://github.com/aelsabbahy/goss/releases/download/${GOSS_VERSION}/goss-linux-amd64 -o /usr/local/bin/goss && \
     chmod +x /usr/local/bin/goss && \
     apk del curl && \
-    rm -rf /var/cache/apk/*
+    /bin/bash -e /clean.sh
 
 # Overlay the root filesystem from this repo
 COPY ./container/root /

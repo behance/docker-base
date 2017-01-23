@@ -35,11 +35,13 @@ On Ubuntu and CentOS-based variants, run:
 
 This file is actually a symlink to the variant-specific script contained in the `/scripts` folder
 
+NOTE: for Alpine variant, which is security-conscious, but does not have a mechanism to isolate security-specific updates, use `apk update && apk upgrade` as a generic alternative.
+
 ### Packaging
 
 A convenience script is provided for post-package installation cleanup
 
-On Ubuntu and CentOS-based variants, run: 
+On all variants, run: 
 ```/bin/bash -e /clean.sh```
 
 This file, like security_updates (above) is actually a symlink to the variant-specific script contained in the `/scripts` folder

@@ -7,7 +7,7 @@ ENV SIGNAL_BUILD_STOP=99 \
     S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     S6_KILL_FINISH_MAXTIME=5000 \
     S6_KILL_GRACETIME=3000 \
-    S6_VERSION=v1.18.1.5 \
+    S6_VERSION=v1.19.1.1 \
     GOSS_VERSION=v0.2.5
 
 # Ensure scripts are available for use in next command
@@ -22,8 +22,8 @@ RUN ln -s /scripts/clean_centos.sh /clean.sh && \
     /bin/bash -e /security_updates.sh && \
     /bin/bash -e /clean.sh && \
     curl -L https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-amd64.tar.gz -o /tmp/s6.tar.gz && \
-    tar xzf /tmp/s6.tar.gz -C / --exclude="./bin" --exclude="./sbin" && \
-    tar xzf /tmp/s6.tar.gz -C /usr ./bin ./sbin && \
+    tar xzf /tmp/s6.tar.gz -C / --exclude="./bin" && \
+    tar xzf /tmp/s6.tar.gz -C /usr ./bin && \
     rm -f /tmp/s6.tar.gz && \
     curl -L https://github.com/aelsabbahy/goss/releases/download/${GOSS_VERSION}/goss-linux-amd64 -o /usr/local/bin/goss && \
     chmod +x /usr/local/bin/goss

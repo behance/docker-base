@@ -8,7 +8,7 @@ ENV SIGNAL_BUILD_STOP=99 \
     S6_KILL_FINISH_MAXTIME=5000 \
     S6_KILL_GRACETIME=3000 \
     S6_VERSION=v1.19.1.1 \
-    GOSS_VERSION=v0.2.5
+    GOSS_VERSION=v0.3.1
 
 # Ensure scripts are available for use in next command
 COPY ./container/root/scripts/* /scripts/

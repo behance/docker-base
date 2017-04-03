@@ -11,4 +11,6 @@ apt-get autoclean -y && \
 apt-get autoremove -y && \
 rm -rf /var/lib/{cache,log}/ && \
 rm -rf /var/lib/apt/lists/*.lz4 && \
-rm -rf /tmp/* /var/tmp/*
+rm -rf /tmp/* /var/tmp/* && \
+rm -rf /usr/share/doc/ && \
+rm -rf /usr/share/man/

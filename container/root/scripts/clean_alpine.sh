@@ -7,4 +7,5 @@
 # are safely removed, without triggering Docker AUFS permission bug
 #-------------------------------------------------------------------
 
-rm -rf /var/cache/apk/*
+rm -rf /var/cache/apk/* && \
+rm -rf /tmp/* /var/tmp/*

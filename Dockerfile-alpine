@@ -39,6 +39,8 @@ RUN ln -s /scripts/clean_alpine.sh /clean.sh && \
 # Overlay the root filesystem from this repo
 COPY ./container/root /
 
+ONBUILD RUN apk update && apk upgrade && /bin/bash -e /clean.sh
+
 RUN goss -g goss.base.yaml validate
 
 # NOTE: intentionally NOT using s6 init as the entrypoint

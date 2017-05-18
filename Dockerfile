@@ -42,6 +42,8 @@ COPY ./container/root /
 
 RUN goss -g goss.base.yaml validate
 
+ONBUILD RUN /bin/bash -e /security_updates.sh && /bin/bash -e /clean.sh
+
 # NOTE: intentionally NOT using s6 init as the entrypoint
 # This would prevent container debugging if any of those service crash
 CMD ["/bin/bash", "/run.sh"]

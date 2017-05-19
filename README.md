@@ -54,7 +54,7 @@ Variable | Example | Description
 `S6_KILL_FINISH_MAXTIME` | `S6_KILL_FINISH_MAXTIME=1000` | Wait time (in ms) for zombie reaping before sending a kill signal
 `S6_KILL_GRACETIME` | `S6_KILL_GRACETIME=500` | Wait time (in ms) for S6 finish scripts before sending kill signal
 
-* `with-contenv` tool, which is used to expose environment variables across scripts, has a limitation that it cannot read beyond 4k characters for environment variable values. To work around this issue, use the script `/scripts/load-env.sh` instead of `with-contenv`. You'll need to remove the `with-contenv` from the shebang line, and add  `source /scripts/load-env.sh` in the next line after the shebang line. 
+* `with-contenv` tool, which is used to expose environment variables across scripts, has a limitation that it cannot read beyond 4k characters for environment variable values. To work around this issue, use the script `/scripts/load_env.sh` instead of `with-contenv`. You'll need to remove the `with-contenv` from the shebang line, and add  `source /scripts/load_env.sh` in the next line after the shebang line. 
 ### Startup/Runtime Modification
 
 To inject changes just before runtime, shell scripts may be placed into the

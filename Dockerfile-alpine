@@ -30,6 +30,8 @@ RUN ln -s /scripts/clean_alpine.sh /clean.sh && \
     curl -L https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-amd64.tar.gz -o /tmp/s6.tar.gz && \
     tar xzf /tmp/s6.tar.gz -C / && \
     rm /tmp/s6.tar.gz && \
+    # https://github.com/gliderlabs/docker-alpine/issues/11#issuecomment-106233554
+    echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' > /etc/nsswitch.conf && \
     # Add goss for local, serverspec-like testing \
     curl -L https://github.com/aelsabbahy/goss/releases/download/${GOSS_VERSION}/goss-linux-amd64 -o /usr/local/bin/goss && \
     chmod +x /usr/local/bin/goss && \

@@ -1,3 +1,4 @@
+# tests the run time image to see that env variables greater than 4K in size is not truncated
 command:
   /test_scripts/test_long_var_with_contenv.sh:
   #truncates the variable to 4096 chars, so the expected value is first 4096 chars only

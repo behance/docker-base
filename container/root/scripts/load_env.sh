@@ -12,7 +12,7 @@ CONTAINER_ENV_LOC=/var/run/s6/container_environment/*
 
 for f in $CONTAINER_ENV_LOC; do
   env_variable_name="${f##*/}"
-  if [ "${env_variable_name}" != "UID" ] && [ "${env_variable_name}" != "!" ] && [ "${env_variable_name}" != "_" ]; then
+  if [ "${env_variable_name}" != "UID" ] && [ "${env_variable_name}" != "!" ]; then
     export "${env_variable_name}"="`cat $f`"
   fi
 done

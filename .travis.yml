@@ -3,7 +3,12 @@ sudo: required
 services:
   - docker
 
+before_install:
+# install goss
+- curl -L https://goss.rocks/install | sudo sh
+
 script:
 - docker build .
 - docker build -f Dockerfile-alpine .
 - docker build -f Dockerfile-centos .
+- ./test.sh

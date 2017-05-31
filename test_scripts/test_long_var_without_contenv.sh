@@ -1,5 +1,5 @@
 #!/bin/bash -e
 
-source /scripts/load_env.sh
+source /scripts/with-bigcontenv
 
 echo ${TEST_LONG_VAR}

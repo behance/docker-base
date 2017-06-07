@@ -9,10 +9,11 @@
 #-------------------------------------------------------------------
 
 CONTAINER_ENV_LOC=/var/run/s6/container_environment/*
+VALID_ENVNAME_REGEX="^[[:alpha:]_][[:alnum:]_]*$"
 
 for f in $CONTAINER_ENV_LOC; do
   env_variable_name="${f##*/}"
-  if [ "${env_variable_name}" != "UID" ] && [ "${env_variable_name}" != "!" ]; then
+  if [ "${env_variable_name}" != "UID" ] && [[ ${env_variable_name} =~ $VALID_ENVNAME_REGEX ]]; then
     export "${env_variable_name}"="`cat $f`"
   fi
 done

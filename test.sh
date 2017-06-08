@@ -18,7 +18,7 @@ for x in Dockerfile*;do
   echo "======================="
   docker build -t runtimetestimage -f "${x}" .
   #passes an env variable of size more than 4K chars
-  time dgoss run -v `pwd`/test_scripts:/test_scripts -e TEST_LONG_VAR="${largevar}" -e 1VAR_NAME=varnameStartWithNumber -e var.name=varnameHasPeriod -e var-name=varnameHasHyphen -e _=varnameHasJustUnderscore runtimetestimage || ((i++))
+  time dgoss run -v `pwd`/test_scripts:/test_scripts -e TEST_LONG_VAR="${largevar}" -e 1VAR_NAME=varnameStartWithNumber -e var.name=varnameHasPeriod -e var-name=varnameHasHyphen runtimetestimage || ((i++))
 done
 
 exit $i

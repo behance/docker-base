@@ -20,6 +20,7 @@ Ubuntu container OS is in use by default
 
 - [S6](https://github.com/just-containers/s6-overlay) process supervisor is used for `only` for zombie reaping (as PID 1), boot coordination, and termination signal translation  
 - [Goss](https://github.com/aelsabbahy/goss) is used for build-time testing  
+- [Dgoss](https://github.com/aelsabbahy/goss/tree/master/extras/dgoss) is used for run-time testing.
 
 ### Expectations
 
@@ -63,8 +64,8 @@ As part of the process manager, these scripts are run in advance of the supervis
 
 ### Testing
 
-Container tests itself as part of build process using [goss](https://github.com/aelsabbahy/goss) validator. 
-To add additional tests, overwrite (or extend) the `/goss.base.yaml` file.  
+- Container tests itself as part of build process using [goss](https://github.com/aelsabbahy/goss) validator. To add additional build-time tests, overwrite (or extend) the `./container/root/goss.base.yaml` file.
+- To initiate run-time validation, please execute `test.sh`. It uses [dgoss](https://github.com/aelsabbahy/goss/tree/master/extras/dgoss) validator. To add additional run-time tests, extend `./test.sh` and `./goss.yaml` file.
 
 
 

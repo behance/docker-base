@@ -35,7 +35,8 @@ RUN /bin/bash -e /scripts/ubuntu_apt_cleanmode.sh && \
     apt-get remove --purge -yq \
         curl \
     && \
-    /bin/bash -e /clean.sh
+    /bin/bash -e /clean.sh && \
+    apt-get remove --purge --auto-remove systemd --allow-remove-essential -y
 
 # Overlay the root filesystem from this repo
 COPY ./container/root /

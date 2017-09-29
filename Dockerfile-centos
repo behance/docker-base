@@ -20,6 +20,7 @@ COPY ./container/root/scripts/* /scripts/
 RUN ln -s /scripts/clean_centos.sh /clean.sh && \
     ln -s /scripts/security_updates_centos.sh /security_updates.sh && \
     /bin/bash -e /security_updates.sh && \
+    rpm -e systemd --nodeps && \
     /bin/bash -e /clean.sh && \
     curl -L https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-amd64.tar.gz -o /tmp/s6.tar.gz && \
     tar xzf /tmp/s6.tar.gz -C / --exclude="./bin" && \

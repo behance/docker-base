@@ -36,7 +36,7 @@ RUN /bin/bash -e /scripts/ubuntu_apt_cleanmode.sh && \
         curl \
     && \
     /bin/bash -e /clean.sh && \
-    # To remove systemd binary
+    # out of order execution, has a dpkg error if performed before the clean script, so keeping it here,
     apt-get remove --purge --auto-remove systemd --allow-remove-essential -y
 
 # Overlay the root filesystem from this repo

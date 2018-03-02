@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:17.10
 LABEL Maintainer="Bryan Latten <latten@adobe.com>"
 
 # Use in multi-phase builds, when an init process requests for the container to gracefully exit, so that it may be committed

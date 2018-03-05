@@ -10,10 +10,11 @@ Provides base OS, security patches, and tools for quick and easy spinup.
 
 ### Variants  
 
-Ubuntu container OS is in use by default  
+Ubuntu 16.04 container OS is in use by default
 
 — Alpine builds available tagged as `-alpine`  
 — Centos builds available tagged as `-centos`
+- Ubuntu 17.04 builds available tagged as `-VERSION#-ubuntu1710`
 
 
 ### Tools

@@ -12,6 +12,7 @@ Provides base OS, security patches, and tools for quick and easy spinup.
 
 — Ubuntu 16.04 LTS is default  
 — Ubuntu 17.10 available, tagged as `-VERSION#-ubuntu-17.10`  
+— Ubuntu 18.04 available, tagged as `-VERSION#-ubuntu-18.04`  
 — Alpine builds available, tagged as `-alpine`  
 — Centos builds available, tagged as `-centos`  
 

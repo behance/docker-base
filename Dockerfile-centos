@@ -7,7 +7,7 @@ ENV SIGNAL_BUILD_STOP=99 \
     S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     S6_KILL_FINISH_MAXTIME=5000 \
     S6_KILL_GRACETIME=3000 \
-    S6_VERSION=v1.21.2.1 \
+    S6_VERSION=v1.21.4.0 \
     GOSS_VERSION=v0.3.5
 
 # Ensure scripts are available for use in next command

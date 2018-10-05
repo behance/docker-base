@@ -8,7 +8,9 @@ ENV SIGNAL_BUILD_STOP=99 \
     S6_KILL_FINISH_MAXTIME=5000 \
     S6_KILL_GRACETIME=3000 \
     S6_VERSION=v1.21.4.0 \
-    GOSS_VERSION=v0.3.5
+    S6_SHA256=e903f138dea67e75afc0f61e79eba529212b311dc83accc1e18a449d58a2b10c \
+    GOSS_VERSION=v0.3.5 \
+    GOSS_SHA256=5669df08e406abf594de0e7a7718ef389e5dc7cc76905e7f6f64711e6aad7fa3
 
 # Ensure scripts are available for use in next command
 COPY ./container/root/scripts/* /scripts/
@@ -27,10 +29,12 @@ RUN /bin/bash -e /scripts/ubuntu_apt_cleanmode.sh && \
     && \
     # Add S6 for zombie reaping, boot-time coordination, signal transformation/distribution
     curl -L https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-amd64.tar.gz -o /tmp/s6.tar.gz && \
+    echo "${S6_SHA256}  /tmp/s6.tar.gz" | sha256sum -c - && \
     tar xzf /tmp/s6.tar.gz -C / && \
     rm /tmp/s6.tar.gz && \
     # Add goss for local, serverspec-like testing
     curl -L https://github.com/aelsabbahy/goss/releases/download/${GOSS_VERSION}/goss-linux-amd64 -o /usr/local/bin/goss && \
+    echo "${GOSS_SHA256}  /usr/local/bin/goss" | sha256sum -c - && \
     chmod +x /usr/local/bin/goss && \
     apt-get remove --purge -yq \
         curl \

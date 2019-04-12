@@ -1,13 +1,8 @@
-FROM ubuntu:16.04
-LABEL Maintainer="Bryan Latten <latten@adobe.com>"
+FROM ubuntu:16.04 as base
 
-# Use in multi-phase builds, when an init process requests for the container to gracefully exit, so that it may be committed
-# Used with alternative CMD (worker.sh), leverages supervisor to maintain long-running processes
-ENV SIGNAL_BUILD_STOP=99 \
-    S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
-    S6_KILL_FINISH_MAXTIME=5000 \
-    S6_KILL_GRACETIME=3000 \
-    S6_VERSION=v1.21.7.0 \
+### Stage 1 - add/remove packages ###
+
+ENV S6_VERSION=v1.21.7.0 \
     S6_SHA256=7ffd83ad59d00d4c92d594f9c1649faa99c0b87367b920787d185f8335cbac47 \
     GOSS_VERSION=v0.3.6 \
     GOSS_SHA256=53dd1156ab66f2c4275fd847372e6329d895cfb2f0bcbec5f86c1c4df7236dde
@@ -45,6 +40,19 @@ RUN /bin/bash -e /scripts/ubuntu_apt_cleanmode.sh && \
 
 # Overlay the root filesystem from this repo
 COPY ./container/root /
+
+
+### Stage 2 --- collapse layers ###
+
+FROM scratch
+COPY --from=base / .
+
+# Use in multi-phase builds, when an init process requests for the container to gracefully exit, so that it may be committed
+# Used with alternative CMD (worker.sh), leverages supervisor to maintain long-running processes
+ENV SIGNAL_BUILD_STOP=99 \
+    S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
+    S6_KILL_FINISH_MAXTIME=5000 \
+    S6_KILL_GRACETIME=3000
 
 RUN goss -g goss.base.yaml validate
 

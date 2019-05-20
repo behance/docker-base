@@ -2,11 +2,6 @@ FROM ubuntu:16.04 as base
 
 ### Stage 1 - add/remove packages ###
 
-ENV S6_VERSION=v1.21.7.0 \
-    S6_SHA256=7ffd83ad59d00d4c92d594f9c1649faa99c0b87367b920787d185f8335cbac47 \
-    GOSS_VERSION=v0.3.6 \
-    GOSS_SHA256=53dd1156ab66f2c4275fd847372e6329d895cfb2f0bcbec5f86c1c4df7236dde
-
 # Ensure scripts are available for use in next command
 COPY ./container/root/scripts/* /scripts/
 
@@ -21,18 +16,13 @@ RUN /bin/bash -e /scripts/ubuntu_apt_cleanmode.sh && \
     /bin/bash -e /security_updates.sh && \
     apt-get install -yqq \
       curl \
+      gpg \
     && \
-    # Add S6 for zombie reaping, boot-time coordination, signal transformation/distribution
-    curl -L https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-amd64.tar.gz -o /tmp/s6.tar.gz && \
-    echo "${S6_SHA256}  /tmp/s6.tar.gz" | sha256sum -c - && \
-    tar xzf /tmp/s6.tar.gz -C / && \
-    rm /tmp/s6.tar.gz && \
-    # Add goss for local, serverspec-like testing
-    curl -L https://github.com/aelsabbahy/goss/releases/download/${GOSS_VERSION}/goss-linux-amd64 -o /usr/local/bin/goss && \
-    echo "${GOSS_SHA256}  /usr/local/bin/goss" | sha256sum -c - && \
-    chmod +x /usr/local/bin/goss && \
+    /bin/bash -e /scripts/install_s6.sh && \
+    /bin/bash -e /scripts/install_goss.sh && \
     apt-get remove --purge -yq \
         curl \
+        gpg \
     && \
     /bin/bash -e /clean.sh && \
     # out of order execution, has a dpkg error if performed before the clean script, so keeping it here,

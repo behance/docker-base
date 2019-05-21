@@ -13,5 +13,14 @@ curl -L https://github.com/just-containers/s6-overlay/releases/download/${S6_VER
 curl -L https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/${S6_NAME}.sig -o /tmp/${S6_NAME}.sig
 curl https://keybase.io/justcontainers/key.asc| gpg --no-tty --batch --import
 gpg --no-tty --batch --verify /tmp/${S6_NAME}.sig /tmp/${S6_NAME}
-tar xzhf /tmp/${S6_NAME} -C /
+
+# Special handling - CentOS
+# @see https://github.com/just-containers/s6-overlay#bin-and-sbin-are-symlinks
+if [ -f /etc/centos-release ]; then
+  tar xzf /tmp/${S6_NAME} -C / --exclude="./bin"
+  tar xzf /tmp/${S6_NAME} -C /usr ./bin
+else
+  tar xzf /tmp/${S6_NAME} -C /
+fi
+
 rm /tmp/${S6_NAME} && rm /tmp/${S6_NAME}.sig

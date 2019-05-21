@@ -16,13 +16,11 @@ RUN /bin/bash -e /scripts/ubuntu_apt_cleanmode.sh && \
     /bin/bash -e /security_updates.sh && \
     apt-get install -yqq \
       curl \
-      gpg \
     && \
     /bin/bash -e /scripts/install_s6.sh && \
     /bin/bash -e /scripts/install_goss.sh && \
     apt-get remove --purge -yq \
         curl \
-        gpg \
     && \
     /bin/bash -e /clean.sh && \
     # out of order execution, has a dpkg error if performed before the clean script, so keeping it here,

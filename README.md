@@ -80,14 +80,14 @@ More advanced changes can take effect using the `run.d` system. Similar to the `
 
 ### Shutdown Behavior
 
-Sequence of events for a crashed supervised service: 
+#### Sequence of events for a crashed supervised service: 
 
 1. [finish](https://github.com/just-containers/s6-overlay#writing-an-optional-finish-script) script is executed
 1. If no `finish` script is specified, service gets restarted, with no further action
-1. If `finish` script specifies to bring the container down, admin-initiated container termination behavior applies (above).
+1. If `finish` script specifies to bring the container down, admin-initiated container termination behavior applies (below).
 
 
-Sequence of events for a `docker stop` or admin-initiated container termination: 
+#### Sequence of events for a `docker stop` or admin-initiated container termination: 
 
 1. SIGTERM is broadcast to all supervised services, described as a [run](https://github.com/just-containers/s6-overlay#writing-a-service-script) script.
 1. Scripts in `/etc/cont-finish.d` are executed, each with S6_KILL_FINISH_MAXTIME

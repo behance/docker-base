@@ -53,8 +53,8 @@ This file, like security_updates (above) is actually a symlink to the variant-sp
 
 Variable | Example | Description
 --- | --- | ---
-S6_KILL_FINISH_MAXTIME | S6_KILL_FINISH_MAXTIME=55000 | The maximum time (in ms) a script in /etc/cont-finish.d could take before sending a KILL signal to it. Take into account that this parameter will be used per each script execution, it's not a max time for the whole set of scripts.
-S6_KILL_GRACETIME | S6_KILL_GRACETIME=500 | Wait time (in ms) for S6 finish scripts before sending kill signal
+S6_KILL_FINISH_MAXTIME | S6_KILL_FINISH_MAXTIME=55000 | The maximum time (in ms) a script in /etc/cont-finish.d could take before sending a KILL signal to it. Take into account that this parameter will be used per each script execution, it's not a max time for the whole set of scripts. This value has a max of 65535 on Alpine variants.
+S6_KILL_GRACETIME | S6_KILL_GRACETIME=500 | Wait time (in ms) for S6 finish scripts before sending kill signal. This value has a max of 65535 on Alpine variants.
 
 * `with-contenv` tool, which is used to expose environment variables across scripts, has a limitation that it cannot read beyond 4k characters for environment variable values. To work around this issue, use the script `/scripts/with-bigcontenv` instead of `with-contenv`. You'll need to remove the `with-contenv` from the shebang line, and add  `source /scripts/with-bigcontenv` in the next line after the shebang line. 
 ### Startup/Runtime Modification

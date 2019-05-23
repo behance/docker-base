@@ -82,7 +82,7 @@ More advanced changes can take effect using the `run.d` system. Similar to the `
 
 #### Sequence of events for a crashed supervised service: 
 
-1. [finish](https://github.com/just-containers/s6-overlay#writing-an-optional-finish-script) script is executed. The exit code of the failed service is present, the service is already down.
+1. S6 [finish](https://github.com/just-containers/s6-overlay#writing-an-optional-finish-script) scripts are executed. The supervised service is presumed down at this point, its return code is a variable (`${1}`).
 1. If no `finish` script is specified, service gets restarted, with no further action
 1. If `finish` script specifies to bring the container down, admin-initiated container termination behavior applies (below).
 
@@ -91,8 +91,8 @@ More advanced changes can take effect using the `run.d` system. Similar to the `
 
 1. SIGTERM is broadcast to all supervised services, described as a [run](https://github.com/just-containers/s6-overlay#writing-a-service-script) script. `S6_KILL_GRACETIME` corresponds with how long to wait for a SIGTERM to complete and return. This first signal can be trapped/intercepted to convert into a graceful stop (see below). Failure for the supervised service to respond to the signal within `S6_KILL_GRACETIME` will result in an untrappable SIGKILL.
 1. Scripts in `/etc/cont-finish.d` are executed, each with `S6_KILL_FINISH_MAXTIME`.
-1. S6 finish scripts are executed, each with `S6_KILL_GRACETIME`, described as a [finish](https://github.com/just-containers/s6-overlay#writing-an-optional-finish-script) script
-1. Beyond this point, signals cannot be trapped or interrupted. Ensure services are already down by this point for cleanliness, or they will be forcibly brought down by the following signals.
+1. S6 [finish](https://github.com/just-containers/s6-overlay#writing-an-optional-finish-script) scripts are executed. The supervised service is presumed down at this point, its return code is a variable (`${1}`).
+1. Beyond this point, signals cannot be trapped or interrupted. All services should already be down by this point, or they will be forcibly brought down by the following signals.
 1. SIGHUP is broadcast to all services, in all trees.
 1. SIGTERM is broadcast to all services, in all trees.
 1. SIGKILL terminates anything remaining

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # --- For all variants
-
+#
 #-------------------------------------------------------------------
 # Builds all the flavors of docker image to execute run time
 # dgoss tests on the image

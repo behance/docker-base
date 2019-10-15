@@ -23,6 +23,7 @@ RUN /bin/bash -e /scripts/ubuntu_apt_cleanmode.sh && \
     apt-get remove --purge -yq \
         curl \
         gpg \
+        apt-transport-https \
     && \
     /bin/bash -e /clean.sh && \
     # out of order execution, has a dpkg error if performed before the clean script, so keeping it here,

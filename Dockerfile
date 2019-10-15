@@ -16,6 +16,7 @@ RUN /bin/bash -e /scripts/ubuntu_apt_cleanmode.sh && \
     /bin/bash -e /security_updates.sh && \
     apt-get install -yqq \
       curl \
+      apt-transport-https \
     && \
     /bin/bash -e /scripts/install_s6.sh && \
     /bin/bash -e /scripts/install_goss.sh && \

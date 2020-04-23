@@ -14,13 +14,9 @@ curl -fL https://github.com/just-containers/s6-overlay/releases/download/${S6_VE
 curl https://keybase.io/justcontainers/key.asc| gpg --no-tty --batch --import
 gpg --no-tty --batch --verify /tmp/${S6_NAME}.sig /tmp/${S6_NAME}
 
-# Special handling - CentOS
+# Special handling - CentOS >= 7 + Ubuntu >= 20.04
 # @see https://github.com/just-containers/s6-overlay#bin-and-sbin-are-symlinks
-if [ -f /etc/centos-release ]; then
-  tar xzf /tmp/${S6_NAME} -C / --exclude="./bin"
-  tar xzf /tmp/${S6_NAME} -C /usr ./bin
-else
-  tar xzf /tmp/${S6_NAME} -C /
-fi
+tar xzf /tmp/${S6_NAME} -C / --exclude="./bin"
+tar xzf /tmp/${S6_NAME} -C /usr ./bin
 
 rm /tmp/${S6_NAME} && rm /tmp/${S6_NAME}.sig

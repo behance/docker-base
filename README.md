@@ -10,19 +10,19 @@ Provides base OS, security patches, and tools for quick and easy spinup.
 
 ### Variants
 
-— Ubuntu 16.04 LTS is default
-— Ubuntu 18.04 LTS available, tagged as `-VERSION#-ubuntu-18.04`
-— Ubuntu 20.04 LTS available, tagged as `-VERSION#-ubuntu-20.04`
-— Alpine builds available, tagged as `-alpine`
-— Centos builds available, tagged as `-centos`
+* Ubuntu 16.04 LTS is default
+* Ubuntu 18.04 LTS available, tagged as `-VERSION#-ubuntu-18.04`
+* Ubuntu 20.04 LTS available, tagged as `-VERSION#-ubuntu-20.04`
+* Alpine builds available, tagged as `-alpine`
+* Centos builds available, tagged as `-centos`
 
 
 
 ### Tools
 
-- [S6](https://github.com/just-containers/s6-overlay) process supervisor is used for `only` for zombie reaping (as PID 1), boot coordination, and termination signal translation
-- [Goss](https://github.com/aelsabbahy/goss) is used for build-time testing
-- [Dgoss](https://github.com/aelsabbahy/goss/tree/master/extras/dgoss) is used for run-time testing.
+* [S6](https://github.com/just-containers/s6-overlay) process supervisor is used for `only` for zombie reaping (as PID 1), boot coordination, and termination signal translation
+* [Goss](https://github.com/aelsabbahy/goss) is used for build-time testing
+* [Dgoss](https://github.com/aelsabbahy/goss/tree/master/extras/dgoss) is used for run-time testing.
 
 ### Expectations
 

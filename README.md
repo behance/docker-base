@@ -1,38 +1,39 @@
-[![Build Status](https://travis-ci.org/behance/docker-base.svg?branch=master)](https://travis-ci.org/behance/docker-base)  
+[![Build Status](https://travis-ci.org/behance/docker-base.svg?branch=master)](https://travis-ci.org/behance/docker-base)
 
 
 # docker-base
 
 https://hub.docker.com/r/behance/docker-base/tags/
 
-Provides base OS, security patches, and tools for quick and easy spinup.  
+Provides base OS, security patches, and tools for quick and easy spinup.
 
 
-### Variants  
+### Variants
 
-— Ubuntu 16.04 LTS is default  
-— Ubuntu 18.04 available, tagged as `-VERSION#-ubuntu-18.04`  
-— Alpine builds available, tagged as `-alpine`  
-— Centos builds available, tagged as `-centos`  
+— Ubuntu 16.04 LTS is default
+— Ubuntu 18.04 LTS available, tagged as `-VERSION#-ubuntu-18.04`
+— Ubuntu 20.04 LTS available, tagged as `-VERSION#-ubuntu-20.04`
+— Alpine builds available, tagged as `-alpine`
+— Centos builds available, tagged as `-centos`
 
 
 
 ### Tools
 
-- [S6](https://github.com/just-containers/s6-overlay) process supervisor is used for `only` for zombie reaping (as PID 1), boot coordination, and termination signal translation  
-- [Goss](https://github.com/aelsabbahy/goss) is used for build-time testing  
+- [S6](https://github.com/just-containers/s6-overlay) process supervisor is used for `only` for zombie reaping (as PID 1), boot coordination, and termination signal translation
+- [Goss](https://github.com/aelsabbahy/goss) is used for build-time testing
 - [Dgoss](https://github.com/aelsabbahy/goss/tree/master/extras/dgoss) is used for run-time testing.
 
 ### Expectations
 
 To add a service to be monitored, simply create a service [run](https://github.com/just-containers/s6-overlay#writing-a-service-script) script
-For programmatic switches, create the service in `/etc/services-available`, and symlink to `/etc/services.d` to enable  
+For programmatic switches, create the service in `/etc/services-available`, and symlink to `/etc/services.d` to enable
 
 ### Security
 
-A convenience script is provided for security-only package updates. 
+A convenience script is provided for security-only package updates.
 
-On Ubuntu and CentOS-based variants, run: 
+On Ubuntu and CentOS-based variants, run:
 ```/bin/bash -e /security_updates.sh```
 
 This file is actually a symlink to the variant-specific script contained in the `/scripts` folder
@@ -43,7 +44,7 @@ NOTE: for Alpine variant, which is security-conscious, but does not have a mecha
 
 A convenience script is provided for post-package installation cleanup
 
-On all variants, run: 
+On all variants, run:
 ```/bin/bash -e /clean.sh```
 
 This file, like security_updates (above) is actually a symlink to the variant-specific script contained in the `/scripts` folder
@@ -56,7 +57,7 @@ Variable | Example | Description
 S6_KILL_FINISH_MAXTIME | S6_KILL_FINISH_MAXTIME=55000 | The maximum time (in ms) a script in /etc/cont-finish.d could take before sending a KILL signal to it. Take into account that this parameter will be used per each script execution, it's not a max time for the whole set of scripts. This value has a max of 65535 on Alpine variants.
 S6_KILL_GRACETIME | S6_KILL_GRACETIME=500 | Wait time (in ms) for S6 finish scripts before sending kill signal. This value has a max of 65535 on Alpine variants.
 
-* `with-contenv` tool, which is used to expose environment variables across scripts, has a limitation that it cannot read beyond 4k characters for environment variable values. To work around this issue, use the script `/scripts/with-bigcontenv` instead of `with-contenv`. You'll need to remove the `with-contenv` from the shebang line, and add  `source /scripts/with-bigcontenv` in the next line after the shebang line. 
+* `with-contenv` tool, which is used to expose environment variables across scripts, has a limitation that it cannot read beyond 4k characters for environment variable values. To work around this issue, use the script `/scripts/with-bigcontenv` instead of `with-contenv`. You'll need to remove the `with-contenv` from the shebang line, and add  `source /scripts/with-bigcontenv` in the next line after the shebang line.
 ### Startup/Runtime Modification
 
 To inject changes just before runtime, shell scripts may be placed into the
@@ -80,14 +81,14 @@ More advanced changes can take effect using the `run.d` system. Similar to the `
 
 ### Shutdown Behavior
 
-#### Sequence of events for a crashed supervised service: 
+#### Sequence of events for a crashed supervised service:
 
 1. S6 [finish](https://github.com/just-containers/s6-overlay#writing-an-optional-finish-script) scripts are executed. The supervised service is presumed down at this point, its return code is a variable (`${1}`).
 1. If no `finish` script is specified, service gets restarted, with no further action
 1. If `finish` script specifies to bring the container down, admin-initiated container termination behavior applies (below).
 
 
-#### Sequence of events for a `docker stop` or admin-initiated container termination: 
+#### Sequence of events for a `docker stop` or admin-initiated container termination:
 
 1. SIGTERM is broadcast to all supervised services, described as a [run](https://github.com/just-containers/s6-overlay#writing-a-service-script) script. `S6_KILL_GRACETIME` corresponds with how long to wait for a SIGTERM to complete and return. This first signal can be trapped/intercepted to convert into a graceful stop (see below). Failure for the supervised service to respond to the signal within `S6_KILL_GRACETIME` will result in an untrappable SIGKILL.
 1. Scripts in `/etc/cont-finish.d` are executed, each with `S6_KILL_FINISH_MAXTIME`.
@@ -99,9 +100,9 @@ More advanced changes can take effect using the `run.d` system. Similar to the `
 
 #### Implementing graceful shutdown from admin-initiated container termination
 
-- Set `S6_KILL_FINISH_MAXTIME` long-enough to shutdown/drain service properly. See table above for upper limits. 
+- Set `S6_KILL_FINISH_MAXTIME` long-enough to shutdown/drain service properly. See table above for upper limits.
 - Trap SIGTERM in supervised service `run` script. Take no action directly at this time.
-- Create a graceful shutdown script, place in `/etc/cont-finish.d` directory. Supervised service must terminate itself as a result, within `S6_KILL_FINISH_MAXTIME` time. Some examples include: sending alternate shutdown control signals (like SIGWINCH or SIGQUIT), 
+- Create a graceful shutdown script, place in `/etc/cont-finish.d` directory. Supervised service must terminate itself as a result, within `S6_KILL_FINISH_MAXTIME` time. Some examples include: sending alternate shutdown control signals (like SIGWINCH or SIGQUIT),
 
 
 ### Long-running processes (workers + crons)

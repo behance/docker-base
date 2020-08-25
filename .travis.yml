@@ -11,6 +11,7 @@ script:
 - docker build .
 - docker build -f Dockerfile-alpine .
 - docker build -f Dockerfile-centos .
+- docker build -f Dockerfile-centos-8 .
 - docker build -f Dockerfile-ubuntu-18.04 .
 - docker build -f Dockerfile-ubuntu-20.04 .
 - ./test.sh

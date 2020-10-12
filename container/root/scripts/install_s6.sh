@@ -7,7 +7,7 @@
 # Requires curl, gpg (or gnupg on Alpine), and tar to be present
 
 S6_NAME=s6-overlay-amd64.tar.gz
-S6_VERSION=v2.0.0.1
+S6_VERSION=v2.1.0.0
 
 curl -fL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/${S6_NAME} -o /tmp/${S6_NAME}
 curl -fL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/${S6_NAME}.sig -o /tmp/${S6_NAME}.sig

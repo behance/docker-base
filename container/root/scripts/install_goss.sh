@@ -6,10 +6,10 @@
 # Downloads, verifies, and installs
 # Requires curl and sha256sum to be present
 
-GOSS_VERSION=v0.3.15
+GOSS_VERSION=v0.3.16
 
 # Manually locate and commit from https://github.com/aelsabbahy/goss/releases/download/vX.Y.Z/goss-linux-amd64.sha256
-GOSS_SHA256=b893b70e66bb1d2031f1ecf72421fff0056fff2ae8f7a4317e91dc7a7f6f7eee
+GOSS_SHA256=827e354b48f93bce933f5efcd1f00dc82569c42a179cf2d384b040d8a80bfbfb
 
 curl -fL https://github.com/aelsabbahy/goss/releases/download/${GOSS_VERSION}/goss-linux-amd64 -o /usr/local/bin/goss
 

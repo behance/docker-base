@@ -1,4 +1,4 @@
-FROM alpine:3.12 as base
+FROM alpine:3.14 as base
 
 ### Stage 1 - add/remove packages ###
 

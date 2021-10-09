@@ -7,6 +7,10 @@ before_install:
 # install goss
 - curl -L https://goss.rocks/install | sudo sh
 
+arch:
+  - amd64
+  - arm64
+
 script:
 - docker build -f Dockerfile-alpine .
 - docker build -f Dockerfile-centos-7 .

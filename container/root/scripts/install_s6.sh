@@ -19,11 +19,13 @@ fi;
 
 S6_NAME=s6-overlay-${ARCH}.tar.gz
 S6_VERSION=v2.2.0.3
+PUBLIC_KEY=6101B2783B2FD161
 
 curl -fL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/${S6_NAME} -o /tmp/${S6_NAME}
 curl -fL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/${S6_NAME}.sig -o /tmp/${S6_NAME}.sig
-curl https://keybase.io/justcontainers/key.asc | gpg --no-tty --batch --import
-gpg --no-tty --batch --verify /tmp/${S6_NAME}.sig /tmp/${S6_NAME}
+
+gpg --keyserver pgp.surfnet.nl --recv-keys $PUBLIC_KEY
+gpg --verify /tmp/${S6_NAME}.sig /tmp/${S6_NAME}
 
 # Special handling - CentOS >= 7 + Ubuntu >= 20.04
 # @see https://github.com/just-containers/s6-overlay#bin-and-sbin-are-symlinks

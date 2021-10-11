@@ -9,10 +9,10 @@
 # Determined automatically to correctly select binary
 ARCH=""
 
-if [ "$(uname -m)" = "x86_64" ]; then
+if [[ "$(uname -m)" = "x86_64" ]]; then
   echo "[s6 install] Detected x86_64 architecture"
   ARCH="amd64"
-elif [ "$(uname -m)" = "aarch64" ]; then
+elif [[ "$(uname -m)" = "aarch64" ]]; then
   echo "[s6 install] Detected ARM architecture"
   ARCH="aarch64"
 fi;

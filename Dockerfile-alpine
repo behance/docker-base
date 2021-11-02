@@ -10,7 +10,7 @@ COPY ./container/root/scripts/* /scripts/
 # - Add S6 for zombie reaping, boot-time coordination, signal transformation/distribution: @see https://github.com/just-containers/s6-overlay#known-issues-and-workarounds
 # - Add goss for local, serverspec-like testing
 RUN ln -s /scripts/clean_alpine.sh /clean.sh && \
-    echo '@edge http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories && \
+    echo '@edge https://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories && \
     apk update && \
     apk add --no-cache \
         sed \

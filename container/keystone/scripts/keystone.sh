@@ -1,6 +1,11 @@
 #!/bin/bash -e
 
-declare -r KEYSTONE_APT_SOURCES=/etc/apt/keystone_sources.list
+# Target architecture of keystone container
+# Can be overriden by docker build TARGETARCH for cross-compilation, otherwise same as host arch
+declare -rx KEYSTONE_ARCH=${TARGETARCH:-$(dpkg --print-architecture)}
+
+# internal use
+declare -r _KEYSTONE_APT_SOURCES=/etc/apt/keystone_sources.list
 
 #########################################################################################
 # Sets up apt-get to download ubuntu components from artifactory.corp.adobe.com
@@ -10,14 +15,37 @@ keystone_initialize() {
   local ubuntu_release=${KEYSTONE_RELEASE:-focal}
 
   # set up apt sources
-  cat <<EOF > /etc/apt/keystone_sources.list
+  case $KEYSTONE_ARCH in
+    amd64)
+      cat <<EOF > /etc/apt/keystone_sources.list
 deb [arch=amd64] https://artifactory.corp.adobe.com/artifactory/archive-ubuntu-remote ${ubuntu_release} main restricted
 deb [arch=amd64] https://artifactory.corp.adobe.com/artifactory/archive-ubuntu-remote ${ubuntu_release}-updates main restricted
 deb [arch=amd64] https://artifactory.corp.adobe.com/artifactory/archive-ubuntu-remote ${ubuntu_release} universe
 deb [arch=amd64] https://artifactory.corp.adobe.com/artifactory/archive-ubuntu-remote ${ubuntu_release}-updates universe
+deb [arch=amd64] https://artifactory.corp.adobe.com/artifactory/archive-ubuntu-remote ${ubuntu_release}-backports  main restricted universe multiverse
 deb [arch=amd64] https://artifactory.corp.adobe.com/artifactory/archive-ubuntu-remote ${ubuntu_release}-security main restricted
+deb [arch=amd64] https://artifactory.corp.adobe.com/artifactory/archive-ubuntu-remote ${ubuntu_release}-security universe
 EOF
-  apt-get -y --no-list-cleanup -o Dir::Etc::SourceList=$KEYSTONE_APT_SOURCES update
+    ;;
+    arm64)
+      # arm64 ports not available on corp artifactory yet
+      cat <<EOF > /etc/apt/keystone_sources.list
+deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ ${ubuntu_release} main restricted
+deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ ${ubuntu_release}-updates main restricted
+deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ ${ubuntu_release} universe
+deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ ${ubuntu_release}-updates universe
+deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ ${ubuntu_release}-backports  main restricted universe multiverse
+deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ ${ubuntu_release}-security main restricted
+deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ ${ubuntu_release}-security universe
+EOF
+    ;;
+    *)
+      echo "Keystone unsupported architecture: $KEYSTONE_ARCH"
+      exit 1
+    ;;
+  esac
+
+  apt-get -y --no-list-cleanup -o Dir::Etc::SourceList=$_KEYSTONE_APT_SOURCES update
 }
 
 #########################################################################################
@@ -49,7 +77,7 @@ keystone_add_dpkg() {
     chown _apt "${workdir}"
     (
       cd "${workdir}"
-      apt-get -o Dir::Etc::SourceList=$KEYSTONE_APT_SOURCES download $dpkg
+      apt-get -o Dir::Etc::SourceList=$_KEYSTONE_APT_SOURCES download $dpkg:$KEYSTONE_ARCH
       dpkg-deb -x ${dpkg}*.deb "${KEYSTONE_DIST}"
       # write package metadata to help CVE scanner software
       dpkg-deb -I ${dpkg}*.deb control > "${KEYSTONE_DIST}/var/lib/dpkg/status.d/${dpkg}"
@@ -189,7 +217,15 @@ keystone_add_busybox() {
 # Installs s6-overlay into $KEYSTONE_DIST                           [Convencience method]
 #########################################################################################
 keystone_add_s6overlay() {
-  keystone_add_part s6
+  ARCH=$KEYSTONE_ARCH . /scripts/install_s6.sh "${KEYSTONE_DIST}"
+}
+
+
+#########################################################################################
+# Installs goss into $KEYSTONE_DIST                                 [Convencience method]
+#########################################################################################
+keystone_add_goss() {
+  ARCH=$KEYSTONE_ARCH . /scripts/install_goss.sh "${KEYSTONE_DIST}"
 }
 
 
@@ -201,10 +237,9 @@ keystone_add_s6overlay() {
 # - scripts
 #########################################################################################
 keystone_add_behance_base() {
-  keystone_add_part \
-    s6 \
-    goss\
-    behance_base
+  keystone_add_s6overlay
+  keystone_add_goss
+  keystone_add_part behance_base
 
   keystone_add_bash
   keystone_add_busybox

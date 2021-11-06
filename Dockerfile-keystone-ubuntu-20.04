@@ -2,7 +2,10 @@ FROM ubuntu:20.04 as keystone_composer
 
 ### Stage 1 --- Keystone Composer Image ###
 
-ARG KEYSTONE_RELEASE
+ONBUILD ARG BUILDARCH
+ONBUILD ARG TARGETARCH
+
+ONBUILD ARG KEYSTONE_RELEASE
 
 SHELL ["/bin/bash", "-c"],
 
@@ -28,8 +31,6 @@ RUN /bin/bash -e /scripts/ubuntu_apt_config.sh && \
       unzip \
     && \
     mkdir ${KEYSTONE_DIST} ${KEYSTONE_PARTS} && \
-    /bin/bash -e /scripts/install_s6.sh ${KEYSTONE_PARTS}/s6 && \
-    /bin/bash -e /scripts/install_goss.sh ${KEYSTONE_PARTS}/goss && \
     /bin/bash -e /clean.sh && \
     # out of order execution, has a dpkg error if performed before the clean script, so keeping it here,
     apt-get remove --purge --auto-remove systemd --allow-remove-essential -y

@@ -6,16 +6,20 @@
 # Downloads, verifies, and extracts
 # Requires curl, gpg (or gnupg on Alpine), and tar to be present
 
-# Determined automatically to correctly select binary
-ARCH=""
-
-if [[ "$(uname -m)" = "x86_64" ]]; then
-  echo "[s6 install] Detected x86_64 architecture"
-  ARCH="amd64"
-elif [[ "$(uname -m)" = "aarch64" ]]; then
-  echo "[s6 install] Detected ARM architecture"
-  ARCH="aarch64"
-fi;
+# Determine architecture for s6 package (either set by caller or determined automatically from system arch)
+case ${ARCH:-$(uname -m)} in
+  x86_64 | amd64)
+    echo "[s6 install] Detected x86_64 architecture"
+    ARCH="amd64"
+    ;;
+  aarch64 | arm64)
+    echo "[s6 install] Detected ARM architecture"
+    ARCH="aarch64"
+    ;;
+  *)
+    echo "unsupported architecture: $ARCH"; exit 1
+    ;;
+esac
 
 # allow script caller to override the install directory
 S6_BASE=${1:-'/'}

@@ -1,8 +1,16 @@
 #!/bin/bash -e
+set -eo pipefail
 
 # Target architecture of keystone container
 # Can be overriden by docker build TARGETARCH for cross-compilation, otherwise same as host arch
 declare -rx KEYSTONE_ARCH=${TARGETARCH:-$(dpkg --print-architecture)}
+
+# Target directory in which to compose keystone container content
+declare -rx KEYSTONE_DIST=${KEYSTONE_DIST:-/dist}
+
+# Source directory of container parts (see keystone_add_part)
+declare -rx KEYSTONE_PARTS=${KEYSTONE_PARTS:-/parts}
+
 
 # internal use
 declare -r _KEYSTONE_APT_SOURCES=/etc/apt/keystone_sources.list
@@ -70,14 +78,14 @@ keystone_add_ubuntu_base() {
 keystone_add_dpkg() {
   mkdir -p "${KEYSTONE_DIST}/var/lib/dpkg/status.d"
 
-  local dpkg
+  local dpkg workdir
   for dpkg in "$@"
   do
-    local workdir=$(mktemp -d --tmpdir dpkg.XXXXXXXXX)
+    workdir=$(mktemp -d --tmpdir dpkg.XXXXXXXXX)
     chown _apt "${workdir}"
     (
       cd "${workdir}"
-      apt-get -o Dir::Etc::SourceList=$_KEYSTONE_APT_SOURCES download $dpkg:$KEYSTONE_ARCH
+      apt-get -o Dir::Etc::SourceList=$_KEYSTONE_APT_SOURCES download "${dpkg}:${KEYSTONE_ARCH}"
       dpkg-deb -x ${dpkg}*.deb "${KEYSTONE_DIST}"
       # write package metadata to help CVE scanner software
       dpkg-deb -I ${dpkg}*.deb control > "${KEYSTONE_DIST}/var/lib/dpkg/status.d/${dpkg}"
@@ -114,7 +122,7 @@ keystone_add_user() {
 
   # ensure home for user exists
   mkdir -p "${KEYSTONE_DIST}/home/${user}"
-  chown ${uid}:${uid} "${KEYSTONE_DIST}/home/${user}"
+  chown "$uid:$uid" "${KEYSTONE_DIST}/home/${user}"
 
   # ensure minimal passwd and group file are present
   if [ ! -f "${KEYSTONE_DIST}/etc/passwd" ] || [ ! -f "${KEYSTONE_DIST}/etc/group" ]; then
@@ -207,7 +215,7 @@ keystone_add_busybox() {
 
   local tool
   for tool in $applets; do
-    echo linking $tool
+    echo "linking $tool"
     ln -s /bin/busybox "${KEYSTONE_DIST}/bin/$tool"
   done
 }
@@ -254,13 +262,18 @@ _keystone_load_scripts() {
 
   if [[ -d "$dir" && -r "$dir" && -x "$dir" ]]; then
     for file in "$dir"/*; do
+      # shellcheck disable=SC2046
       [[ -f "$file" && -r "$file" ]] && . "$file"
     done
   fi
 }
 
+# Protect keystone methods from overwriting before sourcing additional scripts
+# shellcheck disable=SC2046
+readonly -f $(compgen -A function keystone_) $(compgen -A function _keystone_)
+
 # Source files from $KEYSTONE_DIR if defined
-[[ ! -z "$KEYSTONE_DIR" ]] && _keystone_load_scripts "$KEYSTONE_DIR"
+[[ -v KEYSTONE_DIR ]] && _keystone_load_scripts "$KEYSTONE_DIR"
 
 
 #########################################################################################
@@ -282,9 +295,9 @@ _keystone_load_scripts() {
 #  keystone_add_busybox
 #  keystone_add_user 500 nobody
 #########################################################################################
-while [ -n "$1" ]; do
+while (( "$#" )); do
   # check argument is a valid keystone fnction name
-  if [[ $1 == keystone_* ]] && [ $(type -t $1) = function ]; then
+  if [[ $1 == keystone_* ]] && [[ $(type -t "$1") = function ]]; then
     echo "exec $1"
     $1
   else

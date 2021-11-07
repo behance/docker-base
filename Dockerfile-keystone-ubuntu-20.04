@@ -12,6 +12,13 @@ SHELL ["/bin/bash", "-c"],
 ENV KEYSTONE_DIST=/dist \
     KEYSTONE_PARTS=/parts
 
+# Point apt to corp artifactory mirror
+COPY ./container/ca-cert/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+RUN sed -i \
+  -e 's|http://archive.ubuntu.com/ubuntu|https://artifactory.corp.adobe.com/artifactory/archive-ubuntu-remote|g' \
+  -e 's|http://security.ubuntu.com/ubuntu|https://artifactory.corp.adobe.com/artifactory/archive-ubuntu-remote|g' \
+  /etc/apt/sources.list
+
 # Ensure scripts are available for use in next command
 COPY ./container/root/scripts/* /scripts/
 

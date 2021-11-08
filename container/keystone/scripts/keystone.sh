@@ -261,7 +261,7 @@ _keystone_load_scripts() {
   local dir="$1"
 
   if [[ -d "$dir" && -r "$dir" && -x "$dir" ]]; then
-    for file in "$dir"/*; do
+    for file in "$dir"/*.sh; do
       # shellcheck disable=SC2046
       [[ -f "$file" && -r "$file" ]] && . "$file"
     done

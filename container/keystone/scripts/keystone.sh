@@ -38,13 +38,13 @@ EOF
     arm64)
       # arm64 ports not available on corp artifactory yet
       cat <<EOF > /etc/apt/keystone_sources.list
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ ${ubuntu_release} main restricted
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ ${ubuntu_release}-updates main restricted
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ ${ubuntu_release} universe
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ ${ubuntu_release}-updates universe
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ ${ubuntu_release}-backports  main restricted universe multiverse
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ ${ubuntu_release}-security main restricted
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ ${ubuntu_release}-security universe
+deb [arch=arm64] https://artifactory.corp.adobe.com/artifactory/ports-ubuntu-remote ${ubuntu_release} main restricted
+deb [arch=arm64] https://artifactory.corp.adobe.com/artifactory/ports-ubuntu-remote ${ubuntu_release}-updates main restricted
+deb [arch=arm64] https://artifactory.corp.adobe.com/artifactory/ports-ubuntu-remote ${ubuntu_release} universe
+deb [arch=arm64] https://artifactory.corp.adobe.com/artifactory/ports-ubuntu-remote ${ubuntu_release}-updates universe
+deb [arch=arm64] https://artifactory.corp.adobe.com/artifactory/ports-ubuntu-remote ${ubuntu_release}-backports  main restricted universe multiverse
+deb [arch=arm64] https://artifactory.corp.adobe.com/artifactory/ports-ubuntu-remote ${ubuntu_release}-security main restricted
+deb [arch=arm64] https://artifactory.corp.adobe.com/artifactory/ports-ubuntu-remote ${ubuntu_release}-security universe
 EOF
     ;;
     *)

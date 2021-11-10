@@ -17,6 +17,7 @@ COPY ./container/ca-cert/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 RUN sed -i \
   -e 's|http://archive.ubuntu.com/ubuntu|https://artifactory.corp.adobe.com/artifactory/archive-ubuntu-remote|g' \
   -e 's|http://security.ubuntu.com/ubuntu|https://artifactory.corp.adobe.com/artifactory/archive-ubuntu-remote|g' \
+  -e 's|http://ports.ubuntu.com/ubuntu-ports|https://artifactory.corp.adobe.com/artifactory/ports-ubuntu-remote|g' \
   /etc/apt/sources.list
 
 # Ensure scripts are available for use in next command

@@ -1,0 +1,85 @@
+FROM ubuntu:20.04 as keystone_composer
+
+### Stage 1 --- Keystone Composer Image ###
+
+ONBUILD ARG BUILDARCH
+ONBUILD ARG TARGETARCH
+
+ONBUILD ARG KEYSTONE_RELEASE
+
+SHELL ["/bin/bash", "-c"],
+
+ENV KEYSTONE_DIST=/dist \
+    KEYSTONE_PARTS=/parts
+
+# Point apt to corp artifactory mirror
+COPY ./container/ca-cert/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+RUN sed -i \
+  -e 's|http://archive.ubuntu.com/ubuntu|https://artifactory.corp.adobe.com/artifactory/archive-ubuntu-remote|g' \
+  -e 's|http://security.ubuntu.com/ubuntu|https://artifactory.corp.adobe.com/artifactory/archive-ubuntu-remote|g' \
+  -e 's|http://ports.ubuntu.com/ubuntu-ports|https://artifactory.corp.adobe.com/artifactory/ports-ubuntu-remote|g' \
+  /etc/apt/sources.list
+
+# Ensure scripts are available for use in next command
+COPY ./container/root/scripts/* /scripts/
+
+# - Symlink variant-specific scripts to default location
+# - Upgrade base security packages, then clean packaging leftover
+# - Add S6 for zombie reaping, boot-time coordination, signal transformation/distribution: @see https://github.com/just-containers/s6-overlay#known-issues-and-workarounds
+# - Add goss for local, serverspec-like testing
+RUN /bin/bash -e /scripts/ubuntu_apt_config.sh && \
+    /bin/bash -e /scripts/ubuntu_apt_cleanmode.sh && \
+    ln -s /scripts/clean_ubuntu.sh /clean.sh && \
+    ln -s /scripts/security_updates_ubuntu.sh /security_updates.sh && \
+    echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
+    /bin/bash -e /security_updates.sh && \
+    apt-get install -yqq \
+      curl \
+      gpg \
+      unzip \
+    && \
+    mkdir ${KEYSTONE_DIST} ${KEYSTONE_PARTS} && \
+    /bin/bash -e /clean.sh && \
+    # out of order execution, has a dpkg error if performed before the clean script, so keeping it here,
+    apt-get remove --purge --auto-remove systemd --allow-remove-essential -y
+
+# Overlay the root filesystem from this repo
+COPY ./container/keystone /
+
+# Add behance_base files
+COPY ./container/root ${KEYSTONE_PARTS}/behance_base
+
+
+### Stage 2 --- Keystone Runtime Composer ###
+
+FROM keystone_composer as runtime_composer
+
+RUN /scripts/keystone.sh \
+      keystone_initialize \
+      keystone_add_ubuntu_base \
+      keystone_add_behance_base
+
+
+### Stage 3 --- Keystone Runtime ###
+
+FROM scratch as keystone_runtime
+
+COPY --from=runtime_composer /dist /
+
+# Use in multi-phase builds, when an init process requests for the container to gracefully exit, so that it may be committed
+# Used with alternative CMD (worker.sh), leverages supervisor to maintain long-running processes
+ENV SIGNAL_BUILD_STOP=99 \
+    S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
+    S6_KILL_FINISH_MAXTIME=5000 \
+    S6_KILL_GRACETIME=3000
+
+RUN goss -g goss.base.yaml validate
+
+# NOTE: intentionally NOT using s6 init as the entrypoint
+# This would prevent container debugging if any of those service crash
+CMD ["/bin/bash", "/run.sh"]
+
+
+
+### Make keystone_composer the default result
+FROM keystone_composer

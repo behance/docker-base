@@ -4,6 +4,7 @@ FROM alpine:3.14 as base
 
 # Ensure scripts are available for use in next command
 COPY ./container/root/scripts/* /scripts/
+COPY ./container/root/usr/local/bin/* /usr/local/bin/
 
 # - Symlink variant-specific scripts to default location
 # - Add additional repositories to pull packages from

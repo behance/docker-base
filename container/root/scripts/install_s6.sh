@@ -7,15 +7,7 @@
 # Requires curl, gpg (or gnupg on Alpine), and tar to be present
 
 # Determined automatically to correctly select binary
-ARCH=""
-
-if [[ "$(uname -m)" = "x86_64" ]]; then
-  echo "[s6 install] Detected x86_64 architecture"
-  ARCH="amd64"
-elif [[ "$(uname -m)" = "aarch64" ]]; then
-  echo "[s6 install] Detected ARM architecture"
-  ARCH="aarch64"
-fi;
+ARCH="$(archstring arm64 aarch64)"
 
 S6_NAME=s6-overlay-${ARCH}.tar.gz
 S6_VERSION=v2.2.0.3

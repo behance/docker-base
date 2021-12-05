@@ -4,3 +4,11 @@ command:
     exit-status: 0
     stderr: []
     stdout: []
+  # Validate binary installation and availability
+  # Unfortunately cannot rely on any test architecture to prove its working
+  archstring example example:
+    exit-status: 0
+    stdout:
+    - example
+  archstring missing2ndparameter:
+    exit-status: 1

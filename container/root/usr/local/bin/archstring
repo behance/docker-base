@@ -16,7 +16,7 @@ fi;
 DETECTED_ARCH="$(uname -m)"
 ARCH_X64='x86_64'
 ARCH_ARM64='aarch64'
-ARCH_ARM64_ALT='arm4';
+ARCH_ARM64_ALT='arm64';
 
 if [[ $DETECTED_ARCH == $ARCH_X64 ]]; then
   echo $1

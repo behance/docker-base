@@ -7,7 +7,7 @@
 # Requires curl, gpg (or gnupg on Alpine), and tar to be present
 
 # Determined automatically to correctly select binary
-ARCH="$(archstring amd64 aarch64)"
+ARCH="$(archstring --x64 amd64 --arm64 aarch64)"
 
 S6_NAME=s6-overlay-${ARCH}.tar.gz
 S6_VERSION=v2.2.0.3

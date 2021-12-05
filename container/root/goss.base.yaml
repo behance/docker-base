@@ -6,9 +6,15 @@ command:
     stdout: []
   # Validate binary installation and availability
   # Unfortunately cannot rely on any test architecture to prove its working
-  archstring example example:
+  archstring --x64 example --arm64 example:
     exit-status: 0
     stdout:
     - example
-  archstring missing2ndparameter:
+  archstring --x64 example:
     exit-status: 1
+    stdout:
+    - /--arm64/
+  archstring --arm64 example:
+    exit-status: 1
+    stdout:
+    - /--x64/

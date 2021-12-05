@@ -3,15 +3,28 @@
 # Script to detect processor architecture and output one of the two input parameters
 # Example: when a download path requires an arch-specific package name
 #
-# Param 1: output if an x86_64 architecture is detected
-# Param 2: output if an arm64 or aarch64 architecture is detected
+# --x64 {value}: output if an x86_64 architecture is detected
+# --arm64 {value}: output if an arm64 or aarch64 architecture is detected
 
-REQUIRED_PARAM_COUNT=2
+if [[ $1 == *"--"* ]]; then
+  v="${1/--/}"
+  declare $v="$2"
+fi
 
-if [[ $# != $REQUIRED_PARAM_COUNT ]]; then
-  echo "error: ${REQUIRED_PARAM_COUNT} parameters are required"
+if [[ $3 == *"--"* ]]; then
+  v="${3/--/}"
+  declare $v="$4"
+fi
+
+if [ -z "$x64" ]; then
+  echo "error: missing --x64 input"
   exit 1
-fi;
+fi
+
+if [ -z "$arm64" ]; then
+  echo "error: missing --arm64 input"
+  exit 1
+fi
 
 DETECTED_ARCH="$(uname -m)"
 ARCH_X64='x86_64'
@@ -19,11 +32,11 @@ ARCH_ARM64='aarch64'
 ARCH_ARM64_ALT='arm64';
 
 if [[ $DETECTED_ARCH == $ARCH_X64 ]]; then
-  echo $1
+  echo $x64
 elif [[ $DETECTED_ARCH == $ARCH_ARM64 ]]; then
-  echo $2
+  echo $arm64
 elif [[ $DETECTED_ARCH == $ARCH_ARM64_ALT ]]; then
-  echo $2
+  echo $arm64
 else
   echo 'failure: no supported processor architecture detected'
   exit 1

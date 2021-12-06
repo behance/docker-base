@@ -8,7 +8,8 @@
 
 GOSS_VERSION=v0.3.16
 
-# Locate manually and commit below from https://github.com/aelsabbahy/goss/releases/download/${GOSS_VERSION}/goss-linux-${ARCH}.sha256# Determined automatically to correctly select binary
+# Locate manually and commit below from https://github.com/aelsabbahy/goss/releases/download/${GOSS_VERSION}/goss-linux-${ARCH}.sha256
+# Determined automatically to correctly select binary
 ARCH="$(archstring --arm64 arm --x64 amd64)"
 GOSS_SHA256="$(archstring \
   --x64 827e354b48f93bce933f5efcd1f00dc82569c42a179cf2d384b040d8a80bfbfb \

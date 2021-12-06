@@ -10,11 +10,23 @@ command:
     exit-status: 0
     stdout:
     - example
+  archstring -i example -a example:
+    exit-status: 0
+    stdout:
+    - example
   archstring --x64 example:
     exit-status: 1
     stdout:
     - /--arm64/
+  archstring -i example:
+    exit-status: 1
+    stdout:
+    - /--arm64/
   archstring --arm64 example:
+    exit-status: 1
+    stdout:
+    - /--x64/
+  archstring -a example:
     exit-status: 1
     stdout:
     - /--x64/

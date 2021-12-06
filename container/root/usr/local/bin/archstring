@@ -6,7 +6,7 @@
 # --x64 {value}: output if an x86_64 architecture is detected
 # --arm64 {value}: output if an arm64 or aarch64 architecture is detected
 function usage() {
-  echo "usage:a $(basename $0) --x64 value --arm64 value"
+  echo "usage: $(basename $0) --x64 value --arm64 value"
   exit 1
 }
 

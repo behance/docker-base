@@ -23,8 +23,16 @@ do
     -a|--arm64)
       declare arm64="$2"
       ;;
+    *)
+      usage
+      ;;
   esac
-  shift
+  # shift 2, since we consumed the arch specifier and the value
+  shift 2
+  # assert there are positional parameters remaining
+  if [ "$?" -ne 0 ]; then
+    usage
+  fi;
 done
 
 if [ -z "$x64" ]; then

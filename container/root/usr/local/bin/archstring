@@ -5,16 +5,27 @@
 #
 # --x64 {value}: output if an x86_64 architecture is detected
 # --arm64 {value}: output if an arm64 or aarch64 architecture is detected
+function usage() {
+  echo "usage:a $(basename $0) --x64 value --arm64 value"
+  exit 1
+}
 
-if [[ $1 == *"--"* ]]; then
-  v="${1/--/}"
-  declare $v="$2"
+if [[ "$#" -eq 0 ]]; then
+  usage
 fi
 
-if [[ $3 == *"--"* ]]; then
-  v="${3/--/}"
-  declare $v="$4"
-fi
+while [[ "$#" -gt 0 ]]
+do
+  case $1 in
+    -i|--x64)
+      declare x64="$2"
+      ;;
+    -a|--arm64)
+      declare arm64="$2"
+      ;;
+  esac
+  shift
+done
 
 if [ -z "$x64" ]; then
   echo "error: missing --x64 input"
@@ -38,6 +49,6 @@ elif [[ $DETECTED_ARCH == $ARCH_ARM64 ]]; then
 elif [[ $DETECTED_ARCH == $ARCH_ARM64_ALT ]]; then
   echo $arm64
 else
-  echo 'failure: no supported processor architecture detected'
+  echo "failure: $DETECTED_ARCH not supported"
   exit 1
 fi;

@@ -30,17 +30,17 @@ do
   # shift 2, since we consumed the arch specifier and the value
   shift 2
   # assert there are positional parameters remaining
-  if [ "$?" -ne 0 ]; then
+  if [[ "$?" -ne 0 ]]; then
     usage
   fi;
 done
 
-if [ -z "$x64" ]; then
+if [[ -z "$x64" ]]; then
   echo "error: missing --x64 input"
   exit 1
 fi
 
-if [ -z "$arm64" ]; then
+if [[ -z "$arm64" ]]; then
   echo "error: missing --arm64 input"
   exit 1
 fi

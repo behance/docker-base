@@ -16,7 +16,6 @@ Provides base OS, security patches, and tools for quick and easy spinup.
 * Centos 7 builds available, tagged as `-centos-7`
 * Centos 8 builds available, tagged as `-centos-8`
 
-
 ### Tools
 
 * [S6](https://github.com/just-containers/s6-overlay) process supervisor is used for `only` for zombie reaping (as PID 1), boot coordination, and termination signal translation
@@ -57,18 +56,25 @@ S6_KILL_FINISH_MAXTIME | S6_KILL_FINISH_MAXTIME=55000 | The maximum time (in ms)
 S6_KILL_GRACETIME | S6_KILL_GRACETIME=500 | Wait time (in ms) for S6 finish scripts before sending kill signal. This value has a max of 65535 on Alpine variants.
 
 * `with-contenv` tool, which is used to expose environment variables across scripts, has a limitation that it cannot read beyond 4k characters for environment variable values. To work around this issue, use the script `/scripts/with-bigcontenv` instead of `with-contenv`. You'll need to remove the `with-contenv` from the shebang line, and add  `source /scripts/with-bigcontenv` in the next line after the shebang line.
+
 ### Startup/Runtime Modification
 
 To inject changes just before runtime, shell scripts may be placed into the
 `/etc/cont-init.d` folder.
 As part of the process manager, these scripts are run in advance of the supervised processes. @see https://github.com/just-containers/s6-overlay#executing-initialization-andor-finalization-tasks
 
+### Processor Architectures
+
+All variants are tested on x64 and arm64.
+The convenience script `archstring` is provided to switch between strings based on the current machine.
+Usage:
+```archstring --x64 intel --arm64 arm```
+Which will return "intel" when on x64 and arm when on arm64. This is handy when package names or download paths need to be modified per architecture.
+
 ### Testing
 
 - Container tests itself as part of build process using [goss](https://github.com/aelsabbahy/goss) validator. To add additional build-time tests, overwrite (or extend) the `./container/root/goss.base.yaml` file.
 - To initiate run-time validation, please execute `test.sh`. It uses [dgoss](https://github.com/aelsabbahy/goss/tree/master/extras/dgoss) validator. To add additional run-time tests, extend `./test.sh` and `./goss.yaml` file.
-
-
 
 ### Advanced Modification
 
@@ -76,7 +82,6 @@ More advanced changes can take effect using the `run.d` system. Similar to the `
 
 - If a `run.d` script terminates with a non-zero exit code, container will stop, terminating with the script's exit code, unless...
 - If script terminates with exit code of $SIGNAL_BUILD_STOP (99), this will signal the container to stop cleanly. This can be used for a multi-stage build process
-
 
 ### Shutdown Behavior
 

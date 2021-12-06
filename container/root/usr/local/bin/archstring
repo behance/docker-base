@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# Script to detect processor architecture and output one of the two input parameters
+# Example: when a download path requires an arch-specific package name
+#
+# --x64 {value}: output if an x86_64 architecture is detected
+# --arm64 {value}: output if an arm64 or aarch64 architecture is detected
+function usage() {
+  echo "usage: $(basename $0) --x64 value --arm64 value"
+  exit 1
+}
+
+if [[ "$#" -eq 0 ]]; then
+  usage
+fi
+
+while [[ "$#" -gt 0 ]]
+do
+  case $1 in
+    -i|--x64)
+      declare x64="$2"
+      ;;
+    -a|--arm64)
+      declare arm64="$2"
+      ;;
+    *)
+      usage
+      ;;
+  esac
+  # shift 2, since we consumed the arch specifier and the value
+  shift 2
+  # assert there are positional parameters remaining
+  if [[ "$?" -ne 0 ]]; then
+    usage
+  fi;
+done
+
+if [[ -z "$x64" ]]; then
+  echo "error: missing --x64 input"
+  exit 1
+fi
+
+if [[ -z "$arm64" ]]; then
+  echo "error: missing --arm64 input"
+  exit 1
+fi
+
+DETECTED_ARCH="$(uname -m)"
+ARCH_X64='x86_64'
+ARCH_ARM64='aarch64'
+ARCH_ARM64_ALT='arm64'
+
+if [[ $DETECTED_ARCH == $ARCH_X64 ]]; then
+  echo $x64
+elif [[ $DETECTED_ARCH == $ARCH_ARM64 ]]; then
+  echo $arm64
+elif [[ $DETECTED_ARCH == $ARCH_ARM64_ALT ]]; then
+  echo $arm64
+else
+  echo "failure: $DETECTED_ARCH not supported"
+  exit 1
+fi;

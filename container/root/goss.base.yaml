@@ -4,3 +4,38 @@ command:
     exit-status: 0
     stderr: []
     stdout: []
+  # Validate binary installation and availability
+  # Unfortunately cannot rely on any test architecture to prove its working
+  archstring --x64 example --arm64 example:
+    exit-status: 0
+    stdout:
+    - example
+  archstring -i example -a example:
+    exit-status: 0
+    stdout:
+    - example
+  archstring --x64 example:
+    exit-status: 1
+    stdout:
+    - /--arm64/
+  archstring -i example:
+    exit-status: 1
+    stdout:
+    - /--arm64/
+  archstring --arm64 example:
+    exit-status: 1
+    stdout:
+    - /--x64/
+  archstring -a example:
+    exit-status: 1
+    stdout:
+    - /--x64/
+  # uneven number of parameters (shift overrun)
+  archstring -a a -i i -x:
+    exit-status: 1
+    stdout:
+    - /usage/
+  archstring -a a -i i -x a:
+    exit-status: 1
+    stdout:
+    - /usage/

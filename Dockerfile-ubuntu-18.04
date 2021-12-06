@@ -4,6 +4,7 @@ FROM ubuntu:18.04 as base
 
 # Ensure scripts are available for use in next command
 COPY ./container/root/scripts/* /scripts/
+COPY ./container/root/usr/local/bin/* /usr/local/bin/
 
 # - Symlink variant-specific scripts to default location
 # - Upgrade base security packages, then clean packaging leftover

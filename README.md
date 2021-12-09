@@ -132,3 +132,15 @@ Directory | Use
 `/etc/services-available/` | same as above, but must be symlinked into `/etc/services.d/` to take effect
 `/run.d/` | shell scripts (ending in .sh) that make runtime modifications ahead of S6 initialization
 `/scripts` | convenience scripts that can be leveraged in derived images
+
+### Release Management
+
+Github actions provide the machinery for producing tags distributed through Docker Hub. Once a tested and approved PR is merged, simply cutting a new semantically-versioned tag will generate the following matrix of tagged builds:
+- `[major].[minor].[patch](?-variant)`
+- `[major].[minor](?-variant)`
+- `[major](?-variant)`
+Platform support is available for architectures:
+- `linux/arm64`
+- `linux/amd64`
+
+To add new variant based on a new Dockerfile, add an entry to the `matrix.props` with its file and variant suffix.

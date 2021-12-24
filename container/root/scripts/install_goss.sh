@@ -6,7 +6,7 @@
 # Downloads, verifies, and installs
 # Requires curl and sha256sum to be present
 
-GOSS_VERSION=v0.3.16
+GOSS_VERSION=${GOSS_VERSION:="v0.3.16"}
 
 # Locate manually and commit below from https://github.com/aelsabbahy/goss/releases/download/${GOSS_VERSION}/goss-linux-${ARCH}.sha256
 # Determined automatically to correctly select binary

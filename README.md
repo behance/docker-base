@@ -14,7 +14,6 @@ Provides base OS, security patches, and tools for quick and easy spinup.
 * Ubuntu 20.04 LTS available, tagged as `-VERSION#-ubuntu-20.04`
 * Alpine builds available, tagged as `-alpine`
 * Centos 7 builds available, tagged as `-centos-7`
-* Centos 8 builds available, tagged as `-centos-8`
 
 ### Tools
 

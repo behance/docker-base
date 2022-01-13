@@ -26,8 +26,6 @@ jobs:
           suffix: alpine
         - Dockerfile: Dockerfile-centos-7
           suffix: centos-7
-        - Dockerfile: Dockerfile-centos-8
-          suffix: centos-8
     steps:
       -
         name: Checkout

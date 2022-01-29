@@ -16,7 +16,7 @@ PUBLIC_KEY=6101B2783B2FD161
 curl -fL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/${S6_NAME} -o /tmp/${S6_NAME}
 curl -fL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/${S6_NAME}.sig -o /tmp/${S6_NAME}.sig
 
-gpg --keyserver pgp.surfnet.nl --recv-keys $PUBLIC_KEY
+gpg --keyserver hkps://pgp.surfnet.nl --recv-keys $PUBLIC_KEY
 gpg --verify /tmp/${S6_NAME}.sig /tmp/${S6_NAME}
 
 # Special handling - CentOS >= 7 + Ubuntu >= 20.04
@@ -26,11 +26,12 @@ gpg --verify /tmp/${S6_NAME}.sig /tmp/${S6_NAME}
 # -rwxr-xr-x root/root     33856 2019-03-21 12:29 ./bin/execlineb
 # lrwxrwxrwx root/root         0 2019-03-21 12:40 ./usr/bin/execlineb -> /bin/execlineb
 
-if [[ -L /bin ]]; then
-  tar xzf /tmp/${S6_NAME} -C / --exclude="./bin" --exclude="./usr/bin/execlineb"
-  tar xzf /tmp/${S6_NAME} -C /usr ./bin --exclude="./usr/bin/execlineb"
+mkdir -p "${S6_BASE}/"
+if [[ -L "${S6_BASE}/bin" ]]; then
+  tar xzf /tmp/${S6_NAME} -C "${S6_BASE}/" --exclude="./bin" --exclude="./usr/bin/execlineb"
+  tar xzf /tmp/${S6_NAME} -C "${S6_BASE}/usr" ./bin --exclude="./usr/bin/execlineb"
 else
-  tar xzf /tmp/${S6_NAME} -C /
+  tar xzf /tmp/${S6_NAME} -C "${S6_BASE}/"
 fi
 
 rm /tmp/${S6_NAME} && rm /tmp/${S6_NAME}.sig

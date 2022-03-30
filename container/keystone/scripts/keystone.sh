@@ -11,6 +11,9 @@ declare -rx KEYSTONE_DIST=${KEYSTONE_DIST:-/dist}
 # Source directory of container parts (see keystone_add_part)
 declare -rx KEYSTONE_PARTS=${KEYSTONE_PARTS:-/parts}
 
+# Target directory where to install goss
+declare -rx KEYSTONE_GOSS=${KEYSTONE_GOSS:=/bbc_goss}
+
 
 # internal use
 declare -r _KEYSTONE_APT_SOURCES=/etc/apt/keystone_sources.list
@@ -136,7 +139,7 @@ keystone_add_user() {
 
 
 #########################################################################################
-# Installs bash-static into $KEYSTONE_DIST                          [Convencience method]
+# Installs bash-static into $KEYSTONE_DIST                          [Convenience method]
 #########################################################################################
 keystone_add_bash() {
   keystone_add_dpkg bash-static
@@ -145,7 +148,7 @@ keystone_add_bash() {
 
 
 #########################################################################################
-# Installs busybox-static into $KEYSTONE_DIST                       [Convencience method]
+# Installs busybox-static into $KEYSTONE_DIST                       [Convenience method]
 #########################################################################################
 keystone_add_busybox() {
   keystone_add_dpkg busybox-static
@@ -220,31 +223,45 @@ keystone_add_busybox() {
   done
 }
 
+#########################################################################################
+# Creates symlink to archstring                                    [Convenience method]
+#########################################################################################
+keystone_add_archstring() {
+  # Most of the Behance docker-base scripts use archstring to handle multi-arch packages
+  # and expects the script to be in /usr/local/bin / $PATH. 
+  # The typical PATH at this step is
+  # /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  ln -s "${KEYSTONE_PARTS}/behance_base/usr/local/bin/archstring" /usr/local/bin/archstring
+}
+
 
 #########################################################################################
-# Installs s6-overlay into $KEYSTONE_DIST                           [Convencience method]
+# Installs s6-overlay into $KEYSTONE_DIST                           [Convenience method]
 #########################################################################################
 keystone_add_s6overlay() {
-  ARCH=$KEYSTONE_ARCH . /scripts/install_s6.sh "${KEYSTONE_DIST}"
+  ARCH=$KEYSTONE_ARCH S6_BASE=$KEYSTONE_DIST . /scripts/install_s6.sh "${KEYSTONE_DIST}"
 }
 
 
 #########################################################################################
-# Installs goss into $KEYSTONE_DIST                                 [Convencience method]
+# Installs goss into $KEYSTONE_DIST                                 [Convenience method]
 #########################################################################################
 keystone_add_goss() {
-  ARCH=$KEYSTONE_ARCH . /scripts/install_goss.sh "${KEYSTONE_DIST}"
+  # Install goss in a separate location so that it does not get copied over in later stages
+  ARCH=$KEYSTONE_ARCH GOSS_BASE=$KEYSTONE_GOSS . /scripts/install_goss.sh "${KEYSTONE_GOSS}"
 }
 
 
 #########################################################################################
-# Installs all behance base components into $KEYSTONE_DIST          [Convencience method]
+# Installs all behance base components into $KEYSTONE_DIST          [Convenience method]
+# - archstring
 # - s6overlay
 # - goss
 # - bash / busybox
 # - scripts
 #########################################################################################
 keystone_add_behance_base() {
+  keystone_add_archstring
   keystone_add_s6overlay
   keystone_add_goss
   keystone_add_part behance_base

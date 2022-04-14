@@ -1,0 +1,29 @@
+gossfile:
+  # Inherit the tests from docker-base
+  /goss.base.yaml: {}
+command:
+  # Keystone installs busybox
+  # When you run busybox as is, it will print its Usage screen
+  busybox:
+    exit-status: 0
+    stdout:
+    # Check stdout for this message
+    - BusyBox is a multi-call binary that combines many common Unix
+file:
+  # 
+  # Keystone creates minimal user and group files
+  # 
+  # To create the sha256 files, create a temporary file with the expected contents
+  # and then run shasum
+  /etc/passwd:
+    exists: true
+    # bash-5.0# ls -l /etc/passwd
+    # -rw-r--r--    1 root     root            36 Apr  3 16:55 /etc/passwd
+    size: 36
+    sha256: 210af67b4a3f9604e5afc45d2ef5294f167005227cdc22413342f6a64e68bfea
+  /etc/group:
+    exists: true
+    # bash-5.0# ls -l /etc/group
+    # -rw-r--r--    1 root     root            10 Apr  3 16:55 /etc/group
+    size: 10
+    sha256: 7a696fcfba89a55a6d73fa1a03c7f071fad2141340027b17a25db249e26b9be8

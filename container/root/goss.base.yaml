@@ -1,9 +1,9 @@
 command:
   # Use a built-in S6 command to ensure it was installed
   s6-true:
-    exit-status: 0
-    stderr: []
-    stdout: []
+   exit-status: 0
+   stderr: []
+   stdout: []
   # Validate binary installation and availability
   # Unfortunately cannot rely on any test architecture to prove its working
   archstring --x64 example --arm64 example:

@@ -55,6 +55,19 @@ COPY ./container/root ${KEYSTONE_PARTS}/behance_base
 
 FROM keystone_composer AS runtime_composer
 
+ENV KEYSTONE_GOSS=/bbc_goss \
+    KEYSTONE_PARTS=/parts
+
+# Install goss in a separate location so that it does not copied
+# in the keystone_runtime stage
+#
+# The install goss script needs the archstring script which is
+# part of the base
+RUN ln -s "$KEYSTONE_PARTS/behance_base/usr/local/bin/archstring" \
+    /usr/local/bin/archstring && \
+    chmod +x /scripts/install_goss.sh && \
+    /scripts/install_goss.sh "$KEYSTONE_GOSS"
+
 RUN /scripts/keystone.sh \
       keystone_initialize \
       keystone_add_ubuntu_base \

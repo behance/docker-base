@@ -11,6 +11,7 @@
 - Add keystone specific goss tests
 - Update default image to be the keystone_runtime if `--target` is not specified
 - Add `docs/` in `.dockerignore`
+- Add `tr` which is used by `040-check-java.sh` in java-based BBCS - [ETHOS-31761](https://jira.corp.adobe.com/browse/EON-31761)
 - Add this changelog
 
 ## 0.2.0

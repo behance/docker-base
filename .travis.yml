@@ -7,13 +7,18 @@ before_install:
 # install goss
 - curl -L https://goss.rocks/install | sudo sh
 
+os: linux
+
+dist: focal
+
 arch:
   - amd64
-  - arm64
+  - arm64-graviton2
 
 script:
 - docker build -f Dockerfile-alpine .
 - docker build -f Dockerfile-centos-7 .
 - docker build -f Dockerfile-ubuntu-18.04 .
 - docker build -f Dockerfile-ubuntu-20.04 .
+- docker build -f Dockerfile-ubuntu-22.04 .
 - ./test.sh

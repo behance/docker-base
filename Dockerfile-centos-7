@@ -1,3 +1,7 @@
+################################################################################
+# The CentOS flavor is DEPRECATED and will be removed in a future release
+# Please stop using this variant and use the Ubuntu flavor instead
+################################################################################
 FROM centos:7 as base
 
 ### Stage 1 - add/remove packages ###
@@ -14,6 +18,7 @@ RUN ln -s /scripts/clean_centos.sh /clean.sh && \
     ln -s /scripts/security_updates_centos.sh /security_updates.sh && \
     /bin/bash -e /security_updates.sh && \
     rpm -e systemd --nodeps && \
+    yum -y update && \
     /bin/bash -e /clean.sh && \
     /bin/bash -e /scripts/install_s6.sh && \
     /bin/bash -e /scripts/install_goss.sh

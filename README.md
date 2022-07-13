@@ -13,8 +13,8 @@ Provides base OS, security patches, and tools for quick and easy spinup.
 * Ubuntu 18.04 LTS available, tagged as `-VERSION#-ubuntu-18.04`
 * Ubuntu 20.04 LTS available, tagged as `-VERSION#-ubuntu-20.04`
 * Ubuntu 22.04 LTS available, tagged as `-VERSION#-ubuntu-22.04`
-* Alpine builds available, tagged as `-alpine`
-* Centos 7 builds available, tagged as `-centos-7`
+* Alpine builds available, tagged as `-alpine` **DEPRECATED**
+* Centos 7 builds available, tagged as `-centos-7` **DEPRECATED**
 
 ### Tools
 

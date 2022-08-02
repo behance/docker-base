@@ -2,6 +2,12 @@
 
 # 0
 
+## 0.4.0
+
+- Pull latest from Github docker-base
+- Update `keystone.goss.yaml` to specify full path to busybox
+- Update `keystone_add_busybox` function to skip linking applets if it exists - [ETHOS-38168](https://jira.corp.adobe.com/browse/ETHOS-38168)
+
 ## 0.3.0
 
 - Add archstring support symlink (needed by Behance install scripts)

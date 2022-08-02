@@ -8,7 +8,7 @@
 
 # allow script caller to override the install directory
 GOSS_BASE=${1:-'/'}
-GOSS_VERSION=v0.3.16
+GOSS_VERSION=${GOSS_VERSION:="v0.3.16"}
 
 # Locate manually and commit below from https://github.com/aelsabbahy/goss/releases/download/${GOSS_VERSION}/goss-linux-${ARCH}.sha256
 # Determined automatically to correctly select binary

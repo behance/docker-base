@@ -10,7 +10,7 @@
 ARCH="$(archstring --x64 amd64 --arm64 aarch64)"
 
 S6_NAME=s6-overlay-${ARCH}.tar.gz
-S6_VERSION=v2.2.0.3
+S6_VERSION=${S6_VERSION:="v2.1.0.2"}
 PUBLIC_KEY=6101B2783B2FD161
 
 curl -fL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/${S6_NAME} -o /tmp/${S6_NAME}

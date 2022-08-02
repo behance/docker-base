@@ -1,4 +1,8 @@
-FROM alpine:3.14 as base
+################################################################################
+# The AlpineOS flavor is DEPRECATED and will be removed in a future release
+# Please stop using this variant and use the Ubuntu flavor instead
+################################################################################
+FROM alpine:3.15 as base
 
 ### Stage 1 - add/remove packages ###
 

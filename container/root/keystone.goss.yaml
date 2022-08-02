@@ -4,7 +4,7 @@ gossfile:
 command:
   # Keystone installs busybox
   # When you run busybox as is, it will print its Usage screen
-  busybox:
+  /bin/busybox:
     exit-status: 0
     stdout:
     # Check stdout for this message

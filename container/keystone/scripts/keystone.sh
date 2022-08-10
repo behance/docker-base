@@ -217,10 +217,10 @@ keystone_add_busybox() {
   local tool
   for tool in $applets; do
     target_tool="${KEYSTONE_DIST}/bin/$tool"
-    if [[ -f $target_tool ]]; then
-      echo "$tool already exists, skipping linking"
+    if [[ -L $target_tool ]]; then
+      echo "symlink for $target_tool exists. Skipping"
     else
-      echo "linking $tool"
+      echo "linking $target_tool"
       ln -s /bin/busybox "$target_tool"
     fi
   done

@@ -1,0 +1,12 @@
+FROM ubuntu:22.04
+
+WORKDIR /
+
+# Copy the top-level directory that we wish to test
+COPY ./container/root /
+
+# Copy our tests
+COPY ./tests /tests
+
+# Run the shunit2 tests
+CMD ["/bin/bash", "/tests/sh/run_tests.sh"]

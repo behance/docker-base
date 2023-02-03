@@ -18,16 +18,10 @@ jobs:
         # This is the default variant-less distribution (ex. 3.2.1)
         - Dockerfile: Dockerfile-ubuntu-20.04
         # Variant distributions below all have semantic versions + suffix (ex. 3.2.1-ubuntu-18.04)
-        - Dockerfile: Dockerfile-ubuntu-18.04
-          suffix: ubuntu-18.04
         - Dockerfile: Dockerfile-ubuntu-20.04
           suffix: ubuntu-20.04
         - Dockerfile: Dockerfile-ubuntu-22.04
           suffix: ubuntu-22.04
-        - Dockerfile: Dockerfile-alpine
-          suffix: alpine
-        - Dockerfile: Dockerfile-centos-7
-          suffix: centos-7
     steps:
       -
         name: Checkout

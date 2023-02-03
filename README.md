@@ -13,10 +13,6 @@ Provides base OS, security patches, and tools for quick and easy spinup.
 | ------------- | --------------------------- | ------------------ |
 | Ubuntu 20.04  |  `-VERSION#-ubuntu-20.04`   | Current            |
 | Ubuntu 22.04  |  `-VERSION#-ubuntu-22.04`   | Current            |
-| Alpine        |  `-alpine`                  | **DEPRECATED**     |
-| CentOS 7      |  `-centos-7`                | **DEPRECATED**     |
-
-`Alpine`, `CentOS 7` will be removed November 2022.
 
 ### Tools
 
@@ -37,8 +33,6 @@ On Ubuntu and CentOS-based variants, run:
 ```/bin/bash -e /security_updates.sh```
 
 This file is actually a symlink to the variant-specific script contained in the `/scripts` folder
-
-NOTE: for Alpine variant, which is security-conscious, but does not have a mechanism to isolate security-specific updates, use `apk update && apk upgrade` as a generic alternative.
 
 ### Packaging
 
